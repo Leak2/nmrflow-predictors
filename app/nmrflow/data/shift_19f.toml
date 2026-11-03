@@ -1,0 +1,267 @@
+# 19F 化学位移（参考 CFCl3）
+#
+# v0.3.0 新增 "CF3-sp2"（CF₃ 接乙烯基/亚胺碳，原两条 CF₃ 规则都要求 sp³ 邻居而漏掉，
+#        库内 147 条训练记录掉进兜底 −120 / 实测 −61.5）与 "CF3-halogen"；
+#        N-CF3 的 SMARTS 由 [NX3] 放宽到 [NX2,NX3]（亚胺氮上的 CF₃，15 条，中位 −59.3）。
+#        取值来自 tools/mine_hetero.py 对 NMRShiftDB2 训练集的统计，不含留出集。
+#
+# 19F 跨度几百 ppm，加和法在这里基本无效，改用"环境 SMARTS -> 值"直接查表。
+# width = 该环境的典型跨度（ppm），未命中时给一个宽峰而不是假精确单峰。
+#
+# ★ 所有 SMARTS 都必须以 [FX1] 开头 ★
+#   表描述的是"这个氟原子处在什么环境里"，F 自己就是模式的根。
+#   匹配器要求 match[0] == 待查 F 的索引。
+#   旧版以 C 为根，判定条件只是"该 F 出现在某个匹配里"：SO2F 上的 F 因此被
+#   alpha-CF2 的条目抢走，整个谱塌成一个峰。
+#
+#   分支写法仍然是坑：F-C 之后还要再接基团时，只有一个能走主链，
+#   其余必须写成括号分支，如 [FX1][CX4](F)(F)[SX4](=O)(=O)。
+
+version = "0.3.0"
+
+[fallback]
+value = -120.0
+width = 25.0
+confidence = "low"
+note = "未命中环境表，给出的是宽峰估计而非精确值"
+
+# ---------------------------------------------------------------- CF3 ----
+# 顺序：越具体越靠前，先命中者胜出。
+
+[[env]]
+name = "Ar-CF3"
+smarts = "[FX1][CX4]([c])(F)F"
+value = -63.0
+width = 5.0
+confidence = "high"
+
+[[env]]
+name = "CF3-SO2- (三氟甲磺酰 / triflyl)"
+smarts = "[FX1][CX4](F)(F)[SX4](=O)(=O)"
+value = -78.0
+width = 4.0
+confidence = "high"
+
+[[env]]
+name = "CF3-C(=O) (三氟甲基酮)"
+smarts = "[FX1][CX4](F)(F)[CX3]=[OX1]"
+value = -76.0
+width = 8.0
+confidence = "medium"
+
+[[env]]
+name = "Rf-CF3 (全氟烷基末端, F3C-CF2-)"
+smarts = "[FX1][CX4](F)(F)[CX4](F)(F)"
+value = -82.0
+width = 5.0
+confidence = "medium"
+
+[[env]]
+name = "ArO-CF3 (三氟甲氧基)"
+smarts = "[FX1][CX4](F)(F)[OX2]"
+value = -58.5
+width = 5.0
+confidence = "medium"
+
+[[env]]
+name = "CF3-S- (三氟甲硫基)"
+smarts = "[FX1][CX4](F)(F)[SX2]"
+value = -42.0
+width = 8.0
+confidence = "medium"
+
+[[env]]
+# N 可能是 NX3（胺）也可能是 NX2（亚胺/腙的 =N-）。
+# 库内 =N-CF3 有 15 条记录，中位 −59.3，与本条 −55.0 只差 4 ppm，放宽即可，不另立条目。
+name = "N-CF3"
+smarts = "[FX1][CX4](F)(F)[NX2,NX3]"
+value = -55.0
+width = 10.0
+confidence = "low"
+
+[[env]]
+name = "Alkyl-CF3"
+smarts = "[FX1][CX4](F)(F)[CX4;!$(C=[!#6])]"
+value = -70.0
+width = 10.0
+confidence = "medium"
+
+# CF3 接在 sp² 碳上（乙烯基 / 亚胺碳）。
+# 原表的两条都要求邻居是 [CX4]（Alkyl-CF3 / Rf-CF3），于是 FC(F)(F)C=C(Cl)Cl
+# 这种结构两条都不命中，掉进兜底 −120（实测 −61.8，差 58 ppm）。
+# 库内训练集中该环境 147 条记录，中位 −61.5，半宽 7。
+[[env]]
+name = "CF3-sp2 (CF3 接乙烯基/亚胺碳)"
+smarts = "[FX1][CX4](F)(F)[CX3]"
+value = -61.5
+width = 7.0
+confidence = "medium"
+
+# CF3 接卤素（CF3Cl −28.6 / CF3Br −18.1）。库内记录少、离散大，只给 low。
+[[env]]
+name = "CF3-halogen (CF3Cl / CF3Br)"
+smarts = "[FX1][CX4](F)(F)[Cl,Br,I]"
+value = -23.4
+width = 8.0
+confidence = "low"
+
+[[env]]
+name = "CF3 (兜底)"
+smarts = "[FX1][CX4](F)(F)F"
+value = -70.0
+width = 15.0
+confidence = "low"
+
+# ---------------------------------------------------------------- Ar-F ---
+
+[[env]]
+name = "Ar-F"
+smarts = "[FX1][c]"
+value = -113.0
+width = 15.0
+confidence = "medium"
+
+# --------------------------------------------------------------- CF2 ------
+# 全氟链的 α / 内部 / 末端差别很大，必须分开给值。
+# !$(C(F)(F)F) 把 CF3 排除掉，否则 CF3 的 F 也会落进 CF2 条目。
+
+[[env]]
+name = "Rf alpha-CF2 邻磺酰氟 (Rf-CF2-SO2F)"
+smarts = "[FX1][CX4;!$(C(F)(F)F)](F)[SX4](=O)(=O)F"
+value = -110.0
+width = 6.0
+confidence = "medium"
+
+[[env]]
+name = "Rf alpha-CF2 邻磺酸根 (Rf-CF2-SO3-)"
+smarts = "[FX1][CX4;!$(C(F)(F)F)](F)[SX4](=O)(=O)[OX1-]"
+value = -114.0
+width = 6.0
+confidence = "medium"
+
+[[env]]
+name = "Rf alpha-CF2 邻磺酸酯 (Rf-CF2-SO2-O)"
+smarts = "[FX1][CX4;!$(C(F)(F)F)](F)[SX4](=O)(=O)[OX2]"
+value = -109.0
+width = 6.0
+confidence = "medium"
+
+[[env]]
+name = "Rf alpha-CF2 邻砜 (Rf-CF2-SO2-C)"
+smarts = "[FX1][CX4;!$(C(F)(F)F)](F)[SX4](=O)(=O)[#6]"
+value = -114.0
+width = 7.0
+confidence = "medium"
+
+# 全氟链的"邻居是谁"决定位移：
+#   邻 SO3-/SO2R 等吸电子端  -> -110 ~ -115（最去屏蔽）
+#   邻 CH2 / CH（链尾接饱和碳） -> -115 左右（6:2 FTS 的 [CF2]a = -115.1）
+#   邻 CF3（次末端）          -> -126 左右（PFOS 的 C2 = -125.6 ~ -127.1）
+#   两侧都是 CF2（链内部）     -> -121 ~ -123
+# 所以下面的规则按"邻居类型"逐条给出，链内那条必须**两侧都是碳**，
+# 否则连在 S 上的 alpha-CF2 也会被它抢走（两个 CF2 撞成同一个值、谱塌成单峰）。
+
+[[env]]
+name = "Rf-CF2-CH (全氟链末端接饱和碳)"
+smarts = "[FX1][CX4;!$(C(F)(F)F)](F)[CX4;H1,H2,H3]"
+value = -115.0
+width = 6.0
+confidence = "medium"
+
+[[env]]
+name = "Rf-CF2-CF3 (全氟链次末端)"
+smarts = "[FX1][CX4;!$(C(F)(F)F)](F)[CX4](F)(F)F"
+value = -126.0
+width = 5.0
+confidence = "medium"
+
+[[env]]
+name = "Rf 链内 -CF2- (两侧均为全氟碳)"
+smarts = "[FX1][CX4;!$(C(F)(F)F)](F)([CX4])[CX4]"
+value = -122.0
+width = 6.0
+confidence = "medium"
+
+[[env]]
+name = "R-CF2-R (兜底)"
+smarts = "[FX1][CX4;H0;!$(C(F)(F)F)](F)"
+value = -115.0
+width = 12.0
+confidence = "low"
+
+# --------------------------------------------------------------- CHF ------
+
+[[env]]
+name = "R-CHF2"
+smarts = "[FX1][CX4;H1](F)"
+value = -120.0
+width = 20.0
+confidence = "medium"
+
+[[env]]
+name = "R-CH2F"
+smarts = "[FX1][CX4;H2]"
+value = -218.0
+width = 18.0
+confidence = "medium"
+
+[[env]]
+name = "R2CH-F"
+smarts = "[FX1][CX4;H1]"
+value = -190.0
+width = 20.0
+confidence = "medium"
+
+# ------------------------------------------------------------ 无机氟 ------
+
+[[env]]
+name = "PF6-"
+smarts = "[FX1][PX6-](F)(F)(F)(F)F"
+value = -73.0
+width = 5.0
+confidence = "high"
+
+[[env]]
+name = "BF4-"
+smarts = "[FX1][BX4-](F)(F)F"
+value = -151.0
+width = 5.0
+confidence = "high"
+
+# ------------------------------------------------------- 磺酰氟 / 其他 ------
+# 注意顺序：SF5/SF3 的 [FX1][SX6,SX4] 也会匹配 SO2F，必须排在磺酰氟之后。
+
+[[env]]
+name = "Ar-SO2F (芳基磺酰氟)"
+smarts = "[FX1][SX4](=O)(=O)[c]"
+value = 66.0
+width = 8.0
+confidence = "medium"
+
+[[env]]
+name = "R-SO2F (烷基磺酰氟)"
+smarts = "[FX1][SX4](=O)(=O)[#6]"
+value = 46.0
+width = 6.0
+confidence = "high"
+
+[[env]]
+name = "SF5 / SF3"
+smarts = "[FX1][SX6,SX4]"
+value = 60.0
+width = 40.0
+confidence = "low"
+
+[[env]]
+name = "RCO-F"
+smarts = "[FX1][CX3]=[OX1]"
+value = 30.0
+width = 40.0
+confidence = "low"
+
+[[env]]
+name = "R2P(=O)-F"
+smarts = "[FX1][PX4](=O)"
+value = -55.0
+width = 25.0
+confidence = "low"

@@ -1,0 +1,283 @@
+# 13C 化学位移经验表（Tier A，参考 TMS，默认溶剂 CDCl3）
+#
+# v0.5.0 给含 C=C 的环单开一张修正表（[sp3.ring_alkene]），饱和环常数在环烯上不适用。
+# v0.4.0 把 aryl/vinyl 的 β 位增量（b）归零：实测 β 位芳基/烯基不产生去屏蔽，
+#        原先的 6.0 / 3.0 是凭直觉填的，导致乙苯甲基错 6.6、异丙苯甲基错 7.5。
+# v0.3.0 补 sp³ 的环烷修正（[sp3.ring]，6 档），并去掉羧酸/酰胺的重复计数
+#        （C-C(=O)-O 里的 O 与 α 羰基同属一个官能团，OCOR/NHAc 的 β 项置 0）。
+# v0.2.0 把烯碳从"一律 125.0"改成两端加和（[alkene]），并为稠环、共轭羰基补了分档。
+# 变更依据与实测见 tools/diag_sp2.py；sp² 平均误差 4.61 → 0.47 ppm。
+#
+# sp3 碳：Grant-Paul 烷烃加和 + 杂原子取代基修正
+#   δ = -2.3 + 9.1*nα(C) + Σβ(C) + (-2.5)*nγ(C) + 0.3*nδ(C) + Σ 杂原子 α/β/γ 项
+#   Σβ(C)：前两个 β 碳各 9.4，之后每个 4.0（否则新戊烷一类会系统性偏高 5 ppm）
+# 芳环碳：δ = 128.5 + Σ 取代基 i/o/m/p 增量
+# 官能团碳：直接锚定（置信度最高）
+
+version = "0.5.0"
+source = "Grant-Paul; Pretsch 4th ed.; SDBS 经验值"
+
+[sp3.grant_paul]
+constant = -2.3
+alpha = 9.1
+beta_first = 9.4
+beta_extra = 4.0
+gamma = -2.5
+delta = 0.3
+
+# 杂原子取代基的绝对增量（叠加在 Grant-Paul 碳骨架之上）
+[sp3.subst]
+OH      = { a = 51.0, b = 10.0, g = -5.0, smarts = "[OX2H]" }
+OR      = { a = 51.0, b =  9.0, g = -5.0, smarts = "[OX2;H0][#6;!$(C=[OX1])]" }
+OCOR    = { a = 45.0, b =  0.0, g = -4.0, smarts = "[OX2][CX3]=[OX1]", prio = 2 }
+OAr     = { a = 48.0, b =  8.0, g = -4.0, smarts = "[OX2;H0][c]", prio = 2 }
+OSO2R   = { a = 48.0, b =  7.0, g = -4.0, smarts = "[OX2][SX4]", prio = 2 }
+OPO3R   = { a = 56.0, b =  6.0, g = -3.0, smarts = "[OX2][PX4]", prio = 2 }
+F       = { a = 63.0, b =  7.0, g = -3.0, smarts = "[F]" }
+CF3     = { a =  0.0, b =  0.0, g =  0.0, smarts = "[CX4](F)(F)F", prio = 3 }
+Cl      = { a = 28.0, b =  9.0, g = -3.0, smarts = "[Cl]" }
+Br      = { a = 18.0, b =  9.0, g = -3.0, smarts = "[Br]" }
+I       = { a = -8.0, b = 10.0, g = -2.0, smarts = "[I]" }
+NH2     = { a = 24.0, b =  7.0, g = -4.0, smarts = "[NX3;H2]" }
+NHR     = { a = 26.0, b =  7.0, g = -4.0, smarts = "[NX3;H1;!$(N[CX3]=[OX1])]" }
+NR2     = { a = 29.0, b =  7.0, g = -4.0, smarts = "[NX3;H0;!$(N[a]);!$(N[CX3]=[OX1])]" }
+N_aromatic = { a = 30.0, b = 7.0, g = -4.0, smarts = "[nX3;H0]", prio = 3 }
+N_amide = { a = 26.0, b =  6.0, g = -3.0, smarts = "[NX3;$(N[CX3]=[OX1])]", prio = 3 }
+NHAc    = { a = 25.0, b =  0.0, g = -3.0, smarts = "[NX3][CX3]=[OX1]", prio = 3 }
+NO2     = { a = 60.0, b =  5.0, g = -4.0, smarts = "[NX3+](=[OX1])[O-]" }
+SH      = { a = 17.0, b =  7.0, g = -3.0, smarts = "[SX2H]" }
+SR      = { a = 17.0, b =  7.0, g = -3.0, smarts = "[SX2;H0]" }
+SO2R    = { a = 40.0, b =  5.0, g = -3.0, smarts = "[SX4](=[OX1])(=[OX1])" }
+PR2     = { a = 20.0, b =  6.0, g = -2.0, smarts = "[PX3]" }
+POR     = { a = 25.0, b =  6.0, g = -2.0, smarts = "[PX4]" }
+aryl    = { a = 13.0, b =  0.0, g = -1.0, smarts = "[c]" }
+vinyl   = { a =  2.0, b =  0.0, g =  0.0, smarts = "[CX3;$(C=[CX3])]" }
+alkynyl = { a =  0.0, b =  3.0, g =  0.0, smarts = "[CX2;$(C#[CX2])]" }
+CN      = { a =  0.0, b =  4.0, g =  0.0, smarts = "[CX2]#[NX1]" }
+
+# 羰基对 α/β 碳的额外修正（羰基碳本身已按 carbon 计入 Grant-Paul）
+[sp3.carbonyl]
+ketone_aldehyde  = { a = 14.0, b =  4.0, smarts = "[CX3;H0,H1;$(C=[OX1]);!$(C(=[OX1])[OX2,NX3,Cl])]" }
+ester_acid_amide = { a = 14.0, b =  4.0, smarts = "[CX3](=[OX1])[OX2,NX3]" }
+
+# ---------------------------------------------------------------------------
+# 含 C=C 的环：单独一张表
+#
+# [sp3.ring] 是在**饱和**环烷上标定的（环己烷 27.1 等）。环上出现双键后几何变了
+# （环己烯是半椅式、环戊烯接近平面），同一套常数不再适用：
+#
+#   环己烯  烯丙位 CH₂ 预测 29.1 / 实测 25.4（偏高 3.7）
+#           其余 CH₂   预测 27.1 / 实测 22.9（偏高 4.2）
+#   环戊烯  烯丙位 CH₂ 预测 27.9 / 实测 32.9（**偏低 5.0，与环己烯方向相反**）
+#           其余 CH₂   预测 25.9 / 实测 23.6（偏高 2.3）
+#
+# 所以按"环大小 × 是否烯丙位"分档。取值 = 目标 − GP − vinyl@1（烯丙位才有该项）。
+#
+# ★ 只用环戊烯、环己烯两个分子（4 个数据点）标定，5/6 元以外没有依据，
+#   因此这两个子表只有 5 和 6 两个键；其他环大小回退到 [sp3.ring] 的饱和值。
+[sp3.ring_alkene.allylic]
+5 = -3.8
+6 = -8.8
+
+[sp3.ring_alkene.other]
+5 = -11.1
+6 = -9.3
+
+# ---------------------------------------------------------------------------
+# 环烷修正
+#
+# Grant-Paul 是为**开链**烷烃拟合的，公式里没有任何环项。直接算环烷会系统性偏高：
+# 环己烷 32.2（实测 27.1）、环戊烷 34.7（实测 25.9）、环丙烷 10.9（实测 5.7）。
+#
+# 取值 = 实测环烷 − GP，标定依据只有下面这 6 个分子，见 tools/diag_sp3.py。
+# 数值不单调（5 元环 −8.8 比 6 元环 −5.1 更大），这是实验事实：
+# 环戊烷、环己烷的实测值本来就不是单调序列（25.9 / 27.1 / 28.7 / 26.9）。
+#
+# 原子同时属于多个环时取**最小**环的修正，小环的张力主导。
+# 环大小 > 8 不修正（大环已接近开链）。
+#
+# 这里曾有一个独立的 [sp3.override] 表放 cyclopropane = -5.0，现已并入本表的 3 元项，
+# 避免两条规则重复累加。
+[sp3.ring]
+3 = -10.2
+4 =  -2.5
+5 =  -8.8
+6 =  -5.1
+7 =  -1.0
+8 =  -3.1
+
+# 同碳多氟的增量是饱和的（CH3F 75 / CH2F2 109 / CHF3 118 / CF4 120）
+# 必须按"第 1、2、3、4 个氟"分别取值，线性累加会得到荒谬结果
+[sp3.fluorine_saturation]
+f1 = 77.0
+f2 = 34.0
+f3 =  9.0
+f4 =  2.0
+
+# ---------------------------------------------------------------------------
+# 官能团碳直接锚定（不靠加和，置信度最高）
+[functional]
+# CF3 的碳不能靠"三个氟线性累加"，直接锚定（实测 PhCF3 ≈ 124、CF3COOH ≈ 115）
+# ★ SMARTS 陷阱：CF3 再连别的原子时必须把那个原子也写成分支，
+#   [C](F)(F)F[X] 会让 X 连到 F 上；正确写法是 [C](F)(F)(F)[X]。
+CF3_sulfonyl  = { value = 119.5, smarts = "[CX4](F)(F)(F)[SX4](=O)(=O)" }
+CF3_aryl      = { value = 124.0, smarts = "[CX4](F)(F)F[c]" }
+CF3_carbonyl  = { value = 115.0, smarts = "[CX4](F)(F)([CX3]=[OX1])F" }
+CF3_alkyl     = { value = 125.0, smarts = "[CX4](F)(F)F" }
+# 少氟的碳同样不能线性累加：CH3F 75 / CH2F2 110 / CHF3 118 / CF2 ~114
+# （顺序很重要：CF3 的三条必须排在前面，否则会被 CF2 的模式先命中）
+# 全氟链的 α-CF2 与链内 CF2 位移差别明显，分开锚定
+CF2_sulfonyl_ester = { value = 110.0, smarts = "[CX4;H0](F)(F)[SX4](=O)(=O)[OX2]" }
+CF2_sulfone        = { value = 112.0, smarts = "[CX4;H0](F)(F)[SX4](=O)(=O)[#6]" }
+CF2_perfluoro      = { value = 114.0, smarts = "[CX4;H0](F)(F)[CX4](F)(F)" }
+CF2_carbonyl  = { value = 113.0, smarts = "[CX4;H0](F)(F)[CX3]=[OX1]" }
+CF2_alkyl     = { value = 122.0, smarts = "[CX4;H0](F)(F)" }
+CHF2         = { value = 110.0, smarts = "[CX4;H1](F)F" }
+CH2F         = { value =  84.0, smarts = "[CX4;H2]F" }
+CH3F         = { value =  75.0, smarts = "[CX4;H3]F" }
+ketone_aliphatic = { value = 208.0, smarts = "[CX3;H0](=[OX1])([#6])[#6;!$(C=[OX1])]" }
+ketone_aryl      = { value = 197.0, smarts = "[CX3](=[OX1])([c])[#6]" }
+ketone_unsat     = { value = 190.0, smarts = "[CX3](=[OX1])([CX3]=[CX3])[#6]" }
+aldehyde         = { value = 200.0, smarts = "[CX3H1]=[OX1]" }
+# 羰基与 π 体系共轭会压低约 4~6 ppm。乙酸甲酯 171.0 / 苯甲酸甲酯 166.9、
+# 丙烯酸甲酯 167.0；乙酸 178.0 / 苯甲酸 172.5。混用同一个常数会系统性偏高。
+# ★ 这两条必须排在通用条目**前面**：functional 按表内顺序匹配，先命中先生效。
+# ★ SMARTS 陷阱：`[c,CX3;$(C=[CX3])]` 里的 `;` 比 `,` 结合得紧，实际含义是
+#   "(c 或 CX3) 且 C=[CX3]"，芳环永远匹配不上；要写成 `[c,$(C=[CX3])]`。
+carboxylic_acid_conjugated = { value = 172.5, smarts = "[CX3](=[OX1])([c,$(C=[CX3])])[OX2H]" }
+ester_conjugated = { value = 167.0, smarts = "[CX3](=[OX1])([c,$(C=[CX3])])[OX2;H0]" }
+carboxylic_acid  = { value = 178.0, smarts = "[CX3](=[OX1])[OX2H]" }
+ester            = { value = 171.0, smarts = "[CX3](=[OX1])[OX2;H0]" }
+amide            = { value = 168.0, smarts = "[CX3](=[OX1])[NX3]" }
+acid_chloride    = { value = 170.0, smarts = "[CX3](=[OX1])[Cl]" }
+urea_carbamate   = { value = 156.0, smarts = "[CX3](=[OX1])([NX3])[NX3]" }
+imine            = { value = 165.0, smarts = "[CX3]=[NX2]" }
+nitrile          = { value = 117.0, smarts = "[CX2]#[NX1]" }
+# 烯碳不在这里锚定：C=C 两端共用一个常数最多能错 38 ppm，改走 [alkene] 的两端加和
+alkyne           = { value =  80.0, smarts = "[CX2;$(C#[CX2])]" }
+aminal_C         = { value =  70.0, smarts = "[CX4]([NX3])([NX3])" }
+acetal_C         = { value = 100.0, smarts = "[CX4]([OX2])([OX2])" }
+
+# 注意：子表必须放在 [functional] 所有 key = { ... } 之后，
+# 否则 TOML 会把后面的条目挂到这个子表下面。
+# 芳环上的 n-CH3：按邻接羰基数分档（咖啡因 N1/N3/N7 的 27.9 / 29.7 / 33.6）
+[functional.n_methyl_aromatic]
+two_carbonyl = 27.9
+one_carbonyl = 29.7
+none         = 33.6
+
+# ---------------------------------------------------------------------------
+# 烯碳（C=C）：两端加和
+#
+#     δ(Cx) = base + Σ own(Cx) + Σ far(Cy)
+#
+# own = 直接连在 Cx 上的取代基，far = 连在对侧碳 Cy 上的取代基。
+#
+# 这条表取代了原先 `alkene = { value = 125.0 }` 的一刀切。那个常数在乙烯附近
+# 碰巧对（123.3），但烯碳实测跨度 86.5~153.4 ppm：甲基乙烯基醚的 =CH₂ 是 86.5，
+# 差 38.5 ppm，还被标成 confidence=high。
+#
+# 每个增量都由 tools/diag_sp2.py 里那批分子标定，注释写明对应分子与实测值，
+# 可以逐条复核。取舍处（例如 alkyl 的 far 项取 -7.0 而不是丙烯单点拟合的 -7.6）
+# 是为了同时照顾丙烯与反-2-丁烯，两处误差都在 1.5 ppm 内。
+[alkene]
+base = 123.3                       # 乙烯
+
+# 同一个碳上挂多个取代基时，第二个及以后的 π/杂原子项要打折。
+# 证据是异戊二烯（甲基+乙烯基同在 C1，实测 142.5）与异丁烯（两个甲基，实测 143.4）
+# 的对比：两个 σ 给体能线性相加，两个 π 体系会抢同一套轨道，加不满。
+pi_attenuation = 0.55
+pi_classes = ["aryl", "vinyl", "O_alkyl", "O_acyl", "carbonyl", "nitrile", "halogen"]
+
+[alkene.own]
+# 丙烯 =CH 133.4 → +10.1。beta_step 是"α 碳继续往链里延伸"的增量：
+# 1-丁烯 =CH 139.8，比丙烯多一个非环碳邻居 → 10.1 + 6.4 = 16.5
+alkyl    = { value = 10.1, beta_step = 6.4, smarts = "[CX4;!$(C[F,Cl,Br,I,O,N,S,P])]" }
+# 苯乙烯 =CH 136.9 → +13.6
+aryl     = { value = 13.6, smarts = "[c]" }
+# 1,3-丁二烯内侧 137.5 → +14.2
+vinyl    = { value = 14.2, smarts = "[CX3;$(C=[CX3]);!$(C=[OX1])]" }
+# 甲基乙烯基醚 =CH 153.4 → +30.1
+O_alkyl  = { value = 30.1, smarts = "[OX2;H0;!$(O[CX3]=[OX1])]" }
+# 乙烯基乙酸酯 =CH 141.3 → +18.0
+O_acyl   = { value = 18.0, smarts = "[OX2][CX3]=[OX1]" }
+# 丙烯酸甲酯 =CH 130.4 → +7.1
+carbonyl = { value =  7.1, smarts = "[CX3]=[OX1]" }
+# 丙烯腈 =CH 132.6 → +9.3
+nitrile  = { value =  9.3, smarts = "[CX2]#[NX1]" }
+
+[alkene.far]
+# 丙烯 =CH2 115.7 单点拟合是 -7.6；取 -7.0 让反-2-丁烯（124.5）也落在 1 ppm 内
+alkyl    = { value = -7.0, beta_step = -2.5, smarts = "[CX4;!$(C[F,Cl,Br,I,O,N,S,P])]" }
+# 苯乙烯 =CH2 113.8 → -9.5
+aryl     = { value = -9.5, smarts = "[c]" }
+# 1,3-丁二烯末端 117.0 → -6.3
+vinyl    = { value = -6.3, smarts = "[CX3;$(C=[CX3]);!$(C=[OX1])]" }
+# 甲基乙烯基醚 =CH2 86.5 → -36.8（推电子取代基在对侧时影响最大）
+O_alkyl  = { value = -36.8, smarts = "[OX2;H0;!$(O[CX3]=[OX1])]" }
+# 乙烯基乙酸酯 =CH2 97.7 → -25.6
+O_acyl   = { value = -25.6, smarts = "[OX2][CX3]=[OX1]" }
+# 丙烯酸甲酯 =CH2 128.2 → +4.9（吸电子，与给电子方向相反）
+carbonyl = { value =  4.9, smarts = "[CX3]=[OX1]" }
+# 丙烯腈 =CH2 117.9 → -5.4
+nitrile  = { value = -5.4, smarts = "[CX2]#[NX1]" }
+
+# ---------------------------------------------------------------------------
+[aromatic]
+base = 128.5
+
+# 稠环修正。base 128.5 只对单环成立——萘的桥头 133.5、α 位 128.0、β 位 125.9，
+# 用同一个 base 会让桥头错 5 ppm。分档依据 tools/diag_sp2.py 的萘/蒽对照。
+# alpha/beta 按"邻接几个桥头碳"判定，meso 指两侧都是桥头（蒽的 9/10 位）。
+fused_bridgehead = 4.2             # 环内三根键的稠合碳（萘 133.5 / 蒽 131.9 折中）
+fused_alpha      = -0.3            # 邻接 1 个桥头（萘 128.0 / 蒽 128.4）
+fused_beta       = -2.3            # 不邻接桥头（萘 125.9 / 蒽 126.5）
+fused_meso       = -3.2            # 两侧都是桥头（蒽 125.3）
+
+[aromatic.subst]
+CH3     = { i =   9.3, o =   0.7, m =  -0.1, p =  -2.9, smarts = "[CX4;H3]" }
+alkyl   = { i =  14.0, o =  -0.5, m =  -0.2, p =  -2.5, smarts = "[CX4;!H3]" }
+CF3     = { i =   2.6, o =  -3.2, m =   0.4, p =   3.1, smarts = "[CX4](F)(F)F" }
+# 锍盐 S+（Ph3S+ 实测：ipso 133.5 / 邻 134.6 / 间 131.2 / 对 134.0）
+Splus   = { i =   5.0, o =   6.1, m =   2.7, p =   5.5, smarts = "[SX3;+]" }
+# 芳基磺酸酯 Ar-O-SO2-R：取代基起点是**氧**（环上连的原子），ipso 大幅低场
+OSO2R   = { i =  20.0, o =  -3.0, m =   1.5, p =  -2.0, smarts = "[OX2;H0][SX4](=[OX1])(=[OX1])" }
+F       = { i =  34.8, o = -12.9, m =   1.4, p =  -4.5, smarts = "[F]" }
+Cl      = { i =   6.4, o =   0.2, m =   1.0, p =  -1.9, smarts = "[Cl]" }
+Br      = { i =  -5.4, o =   3.4, m =   2.2, p =  -1.0, smarts = "[Br]" }
+I       = { i = -32.3, o =   9.9, m =   2.6, p =  -0.4, smarts = "[I]" }
+OH      = { i =  26.9, o = -12.7, m =   1.4, p =  -7.3, smarts = "[OX2H]" }
+OMe     = { i =  31.4, o = -14.4, m =   1.0, p =  -7.7, smarts = "[OX2;H0][#6]" }
+OAc     = { i =  23.0, o =  -8.0, m =   1.0, p =  -5.0, smarts = "[OX2][CX3]=[OX1]" }
+NH2     = { i =  18.2, o = -13.3, m =   0.9, p =  -9.8, smarts = "[NX3;H2]" }
+NHR     = { i =  20.0, o = -14.0, m =   0.9, p = -10.0, smarts = "[NX3;H1;!$(N[CX3]=[OX1])]" }
+NR2     = { i =  22.0, o = -15.0, m =   0.9, p = -10.0, smarts = "[NX3;H0;!$(N[a])]" }
+NHAc    = { i =  14.0, o =  -9.0, m =   0.5, p =  -6.0, smarts = "[NX3][CX3]=[OX1]" }
+NO2     = { i =  19.6, o =  -5.3, m =   0.8, p =   6.0, smarts = "[NX3+](=[OX1])[O-]" }
+CN      = { i = -15.4, o =   3.6, m =   0.6, p =   3.9, smarts = "[CX2]#[NX1]" }
+CHO     = { i =   8.4, o =   1.2, m =   0.6, p =   5.0, smarts = "[CX3H1]=[OX1]" }
+COR     = { i =   8.9, o =   0.1, m =   0.7, p =   5.2, smarts = "[CX3;H0]=[OX1]" }
+COOH    = { i =   5.0, o =   1.4, m =   0.9, p =   5.3, smarts = "[CX3](=[OX1])[OX2H]" }
+COOR    = { i =   2.1, o =   1.2, m =  -0.1, p =   4.3, smarts = "[CX3](=[OX1])[OX2;H0]" }
+CONR2   = { i =   5.0, o =  -1.0, m =   0.5, p =   3.0, smarts = "[CX3](=[OX1])[NX3]" }
+COCl    = { i =   8.0, o =   1.5, m =   0.8, p =   6.0, smarts = "[CX3](=[OX1])[Cl]" }
+Ph      = { i =  12.0, o =  -1.5, m =   0.0, p =  -1.0, smarts = "[c]" }
+vinyl   = { i =   8.0, o =  -1.0, m =   0.3, p =  -1.5, smarts = "[CX3;$(C=[CX3])]" }
+SO2R    = { i =  12.0, o =  -2.0, m =   1.0, p =   5.0, smarts = "[SX4](=[OX1])(=[OX1])" }
+SR      = { i =   6.0, o =  -1.0, m =   0.5, p =  -2.0, smarts = "[SX2]" }
+POR     = { i =   8.0, o =   1.0, m =   0.5, p =   3.0, smarts = "[PX4]" }
+
+# ---------------------------------------------------------------------------
+# 杂环碳：苯环 base + 杂原子修正（置信度较低）
+[heteroaromatic]
+base = 128.5
+alpha_ring_N   = 21.5      # 吡啶 C2/C6 ≈ 150
+beta_ring_N    = -5.0      # 吡啶 C3/C5 ≈ 123.5
+gamma_ring_N   =  7.4      # 吡啶 C4 ≈ 135.9
+alpha_ring_NH  = -8.0      # 吡咯 C2/C5 ≈ 118
+beta_ring_NH   = -18.0     # 吡咯 C3/C4 ≈ 108
+alpha_ring_O   = 14.0      # 呋喃 C2/C5 ≈ 143
+beta_ring_O    = -19.0     # 呋喃 C3/C4 ≈ 110
+alpha_ring_S   =  3.0      # 噻吩 C2/C5 ≈ 127
+beta_ring_S    =  1.0
+subst_scale    = 0.70

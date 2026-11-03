@@ -1,0 +1,135 @@
+# 归属标签规则：按优先级从上到下匹配"带氢/被观测的那个重原子"
+# 全部写成单原子递归 SMARTS（避免 RDKit 对对称多原子模式只返回一个方向的问题）
+
+[[h]]
+label = "-COOH"
+smarts = "[OX2H;$(O[CX3]=[OX1])]"
+
+[[h]]
+label = "-OH"
+smarts = "[OX2H]"
+
+[[h]]
+label = "-CONH-"
+smarts = "[NX3;H1,H2;$(N[CX3]=[OX1])]"
+
+[[h]]
+label = "-SO2NH-"
+smarts = "[NX3;H1,H2;$(N[SX4])]"
+
+[[h]]
+label = "-NH-"
+smarts = "[nH]"
+
+[[h]]
+label = "-NH2"
+smarts = "[NX3;H2]"
+
+[[h]]
+label = "-NH-"
+smarts = "[NX3;H1]"
+
+[[h]]
+label = "-SH"
+smarts = "[SX2H]"
+
+[[h]]
+label = "-CHO"
+smarts = "[CX3H1;$(C=[OX1])]"
+
+[[h]]
+label = "Ph-H"
+smarts = "[c;$(c1ccccc1)]"
+
+[[h]]
+label = "Ar-H"
+smarts = "[c]"
+
+[[h]]
+label = "=CH"
+smarts = "[CX3;H1;$(C=[CX3])]"
+
+[[h]]
+label = "=CH2"
+smarts = "[CX3;H2;$(C=[CX3])]"
+
+[[h]]
+label = "-C#CH"
+smarts = "[CX2;H1;$(C#[CX2])]"
+
+[[h]]
+label = "-CH3"
+smarts = "[CX4;H3]"
+
+[[h]]
+label = "-CH2-"
+smarts = "[CX4;H2]"
+
+[[h]]
+label = "-CH-"
+smarts = "[CX4;H1]"
+
+[[h]]
+label = "-CH-"
+smarts = "[CX3;H1]"
+
+# --- 13C 归属 ---
+[[c]]
+label = "-COOH"
+smarts = "[CX3](=[OX1])[OX2H]"
+
+[[c]]
+label = "-COO-"
+smarts = "[CX3](=[OX1])[OX2;H0]"
+
+[[c]]
+label = "-CONH-"
+smarts = "[CX3](=[OX1])[NX3]"
+
+[[c]]
+label = "-CHO"
+smarts = "[CX3H1]=[OX1]"
+
+[[c]]
+label = "C=O"
+smarts = "[CX3]=[OX1]"
+
+[[c]]
+label = "-CF3"
+smarts = "[CX4](F)(F)F"
+
+[[c]]
+label = "-C#N"
+smarts = "[CX2]#[NX1]"
+
+[[c]]
+label = "Ph-C"
+smarts = "[c;$(c1ccccc1)]"
+
+[[c]]
+label = "Ar-C"
+smarts = "[c]"
+
+[[c]]
+label = "=CH2"
+smarts = "[CX3;H2]"
+
+[[c]]
+label = "=CH-"
+smarts = "[CX3;H1]"
+
+[[c]]
+label = ">C<"
+smarts = "[CX4;H0]"
+
+[[c]]
+label = "-CH3"
+smarts = "[CX4;H3]"
+
+[[c]]
+label = "-CH2-"
+smarts = "[CX4;H2]"
+
+[[c]]
+label = "-CH-"
+smarts = "[CX4;H1]"

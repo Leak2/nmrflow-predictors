@@ -1,0 +1,35 @@
+# nmrflow 示例集：每行一个 SMILES，# 之后是注释
+# 基础链状
+CCO                                  # 乙醇
+CCOC(C)=O                            # 乙酸乙酯
+CCCCCCCC                             # 正辛烷
+CC(C)CC                              # 2-甲基丁烷
+CC=O                                 # 乙醛
+OC(=O)C                              # 乙酸
+CC(C)=O                              # 丙酮
+
+# 芳香 / 杂芳
+c1ccccc1                             # 苯
+Cc1ccccc1                            # 甲苯
+Oc1ccccc1                            # 苯酚
+Cc1ccc([N+](=O)[O-])cc1              # 对硝基甲苯
+c1ccc2ccccc2c1                       # 萘
+c1ccc2[nH]ccc2c1                     # 吲哚
+c1ccc2ncccc2c1                       # 喹啉（稠环位点映射）
+Cn1cnc2c1c(=O)n(C)c(=O)n2C           # 咖啡因
+
+# 含 F -> 自动追加 19F
+Fc1ccccc1                            # 氟苯（邻/间/对 H-F 都可分辨）
+Fc1ccc(F)cc1                         # 1,4-二氟苯
+FC(F)(F)c1ccccc1                     # 三氟甲苯（CF3 碳 q, 1J = 272.6 Hz）
+CC(F)(F)C(=O)O                       # 2,2-二氟丙酸
+FC(F)(F)c1ccc(Cl)cc1                 # 对氯三氟甲苯
+
+# 含 P -> 自动追加 31P
+COP(=O)(OC)OC                        # 磷酸三甲酯
+CCOP(=O)(OCC)OCC                     # 磷酸三乙酯
+OP(=O)(O)O                           # 磷酸
+CP(=O)(O)O                           # 甲基膦酸
+
+# 含 F 且含 P -> 19F + 31P 都出
+FP(=O)(OC)OC                         # 甲基膦酰二氟甲酯类

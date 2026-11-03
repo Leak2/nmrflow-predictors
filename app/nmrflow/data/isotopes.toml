@@ -1,0 +1,164 @@
+# 元素同位素表
+#
+# monoisotopic : 单同位素（最轻丰度最高同位素）精确质量，Da
+# isotopes     : 各同位素的质量与天然丰度（丰度和为 1）
+#
+# 数据来源：IUPAC CIAAW / NIST
+
+[elements.H]
+monoisotopic = 1.00782503207
+isotopes = [
+  { mass = 1.00782503207, abundance = 0.999885 },
+  { mass = 2.01410177780, abundance = 0.000115 },
+]
+
+[elements.C]
+monoisotopic = 12.00000000000
+isotopes = [
+  { mass = 12.00000000000, abundance = 0.989300 },
+  { mass = 13.00335483507, abundance = 0.010700 },
+]
+
+[elements.N]
+monoisotopic = 14.00307400480
+isotopes = [
+  { mass = 14.00307400480, abundance = 0.996320 },
+  { mass = 15.00010889820, abundance = 0.003680 },
+]
+
+[elements.O]
+monoisotopic = 15.99491461960
+isotopes = [
+  { mass = 15.99491461960, abundance = 0.997570 },
+  { mass = 16.99913170000, abundance = 0.000380 },
+  { mass = 17.99915961290, abundance = 0.002050 },
+]
+
+[elements.F]
+monoisotopic = 18.99840322000
+isotopes = [
+  { mass = 18.99840322000, abundance = 1.0 },
+]
+
+[elements.P]
+monoisotopic = 30.97376163000
+isotopes = [
+  { mass = 30.97376163000, abundance = 1.0 },
+]
+
+[elements.S]
+monoisotopic = 31.97207117440
+isotopes = [
+  { mass = 31.97207117440, abundance = 0.949900 },
+  { mass = 32.97145890980, abundance = 0.007500 },
+  { mass = 33.96786700400, abundance = 0.042500 },
+  { mass = 35.96708071000, abundance = 0.000100 },
+]
+
+[elements.Cl]
+monoisotopic = 34.96885268000
+isotopes = [
+  { mass = 34.96885268000, abundance = 0.757800 },
+  { mass = 36.96590259000, abundance = 0.242200 },
+]
+
+[elements.Br]
+monoisotopic = 78.91833760000
+isotopes = [
+  { mass = 78.91833760000, abundance = 0.506900 },
+  { mass = 80.91629060000, abundance = 0.493100 },
+]
+
+[elements.I]
+monoisotopic = 126.90447260000
+isotopes = [
+  { mass = 126.90447260000, abundance = 1.0 },
+]
+
+[elements.Si]
+monoisotopic = 27.97692653442
+isotopes = [
+  { mass = 27.97692653442, abundance = 0.922230 },
+  { mass = 28.97649466490, abundance = 0.046850 },
+  { mass = 29.97377013600, abundance = 0.030920 },
+]
+
+[elements.B]
+monoisotopic = 11.00930536000
+isotopes = [
+  { mass = 10.01293695000, abundance = 0.199000 },
+  { mass = 11.00930536000, abundance = 0.801000 },
+]
+
+[elements.Se]
+monoisotopic = 79.91652180000
+isotopes = [
+  { mass = 73.92247640000, abundance = 0.008900 },
+  { mass = 75.91921360000, abundance = 0.093700 },
+  { mass = 76.91991400000, abundance = 0.076300 },
+  { mass = 77.91730910000, abundance = 0.237700 },
+  { mass = 79.91652180000, abundance = 0.496100 },
+  { mass = 81.91669940000, abundance = 0.087300 },
+]
+
+[elements.Na]
+monoisotopic = 22.98976928090
+isotopes = [
+  { mass = 22.98976928090, abundance = 1.0 },
+]
+
+[elements.K]
+monoisotopic = 38.96370648640
+isotopes = [
+  { mass = 38.96370648640, abundance = 0.932581 },
+  { mass = 40.96182525790, abundance = 0.067302 },
+]
+
+[elements.Li]
+monoisotopic = 7.01600343660
+isotopes = [
+  { mass = 6.01512288740, abundance = 0.075900 },
+  { mass = 7.01600343660, abundance = 0.924100 },
+]
+
+[elements.Mg]
+monoisotopic = 23.98504169700
+isotopes = [
+  { mass = 23.98504169700, abundance = 0.789900 },
+  { mass = 24.98583697600, abundance = 0.100000 },
+  { mass = 25.98259296800, abundance = 0.110100 },
+]
+
+[elements.Ca]
+monoisotopic = 39.96259086300
+isotopes = [
+  { mass = 39.96259086300, abundance = 0.969410 },
+  { mass = 41.95861783000, abundance = 0.006470 },
+  { mass = 43.95548149000, abundance = 0.020860 },
+]
+
+[elements.Fe]
+monoisotopic = 55.93493633000
+isotopes = [
+  { mass = 53.93960899000, abundance = 0.058450 },
+  { mass = 55.93493633000, abundance = 0.917540 },
+  { mass = 56.93539284000, abundance = 0.021190 },
+  { mass = 57.93327443000, abundance = 0.002820 },
+]
+
+[elements.Cu]
+monoisotopic = 62.92959747000
+isotopes = [
+  { mass = 62.92959747000, abundance = 0.691500 },
+  { mass = 64.92778970000, abundance = 0.308500 },
+]
+
+[elements.Zn]
+monoisotopic = 63.92914201000
+isotopes = [
+  { mass = 63.92914201000, abundance = 0.486300 },
+  { mass = 65.92603381000, abundance = 0.279200 },
+  { mass = 66.92712775000, abundance = 0.041100 },
+  { mass = 67.92484429000, abundance = 0.184500 },
+  { mass = 69.92531920000, abundance = 0.006100 },
+]

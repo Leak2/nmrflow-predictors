@@ -1,0 +1,153 @@
+# 溶剂注册表
+#
+# residual_1h / residual_13c : 残余溶剂峰（画谱图时标注，不进报道值文本）
+# labile.<class>             : 活泼氢的位移中心与线宽（Hz）
+#                              class 见 nmrflow/mol/labile.py 的分类
+# drop_exchangeable          : true 表示该溶剂中活泼氢被交换掉，不出现
+# labile_couples             : true 表示交换慢，活泼氢参与耦合（DMSO 中醇 OH 出 t/d）
+# shift_offset               : 该溶剂相对 CDCl3 的整体位移微调（ppm）
+
+[CDCl3]
+display = "CDCl3"
+residual_1h = [{ shift = 7.26, label = "CHCl3" }]
+residual_13c = [{ shift = 77.16, label = "CDCl3" }]
+drop_exchangeable = false
+labile_couples = false
+shift_offset = 0.0
+labile.ROH    = { center = 2.2,  width_hz = 5.0 }
+labile.ArOH   = { center = 5.6,  width_hz = 6.0 }
+labile.COOH   = { center = 11.5, width_hz = 8.0 }
+labile.CONH   = { center = 7.6,  width_hz = 6.0 }
+labile.NH2    = { center = 1.8,  width_hz = 6.0 }
+labile.SH     = { center = 1.6,  width_hz = 4.0 }
+labile.ArNH   = { center = 8.3,  width_hz = 7.0 }
+labile.SO2NH  = { center = 6.5,  width_hz = 7.0 }
+labile.oxime  = { center = 9.0,  width_hz = 7.0 }
+labile.enol   = { center = 12.0, width_hz = 8.0 }
+
+[DMSO]
+display = "DMSO-d6"
+residual_1h = [{ shift = 2.50, label = "DMSO" }, { shift = 3.33, label = "H2O" }]
+residual_13c = [{ shift = 39.52, label = "DMSO-d6" }]
+drop_exchangeable = false
+labile_couples = true
+shift_offset = 0.0
+labile.ROH    = { center = 4.6,  width_hz = 4.0 }
+labile.ArOH   = { center = 9.5,  width_hz = 4.0 }
+labile.COOH   = { center = 12.6, width_hz = 6.0 }
+labile.CONH   = { center = 9.9,  width_hz = 4.0 }
+labile.NH2    = { center = 3.2,  width_hz = 6.0 }
+labile.SH     = { center = 2.5,  width_hz = 4.0 }
+labile.ArNH   = { center = 11.2, width_hz = 4.0 }
+labile.SO2NH  = { center = 10.5, width_hz = 5.0 }
+labile.oxime  = { center = 11.0, width_hz = 5.0 }
+labile.enol   = { center = 13.0, width_hz = 6.0 }
+
+[MeOD]
+display = "CD3OD"
+residual_1h = [{ shift = 3.31, label = "CD3OH" }, { shift = 4.87, label = "HDO" }]
+residual_13c = [{ shift = 49.00, label = "CD3OD" }]
+drop_exchangeable = true
+labile_couples = false
+shift_offset = 0.0
+labile.ROH    = { center = 4.8, width_hz = 4.0 }
+labile.ArOH   = { center = 4.8, width_hz = 4.0 }
+labile.COOH   = { center = 4.8, width_hz = 4.0 }
+labile.CONH   = { center = 4.8, width_hz = 4.0 }
+labile.NH2    = { center = 4.8, width_hz = 4.0 }
+labile.SH     = { center = 4.8, width_hz = 4.0 }
+labile.ArNH   = { center = 4.8, width_hz = 4.0 }
+labile.SO2NH  = { center = 4.8, width_hz = 4.0 }
+labile.oxime  = { center = 4.8, width_hz = 4.0 }
+labile.enol   = { center = 4.8, width_hz = 4.0 }
+
+[D2O]
+display = "D2O"
+residual_1h = [{ shift = 4.79, label = "HDO" }]
+residual_13c = []
+drop_exchangeable = true
+labile_couples = false
+shift_offset = 0.0
+labile.ROH    = { center = 4.8, width_hz = 4.0 }
+labile.ArOH   = { center = 4.8, width_hz = 4.0 }
+labile.COOH   = { center = 4.8, width_hz = 4.0 }
+labile.CONH   = { center = 4.8, width_hz = 4.0 }
+labile.NH2    = { center = 4.8, width_hz = 4.0 }
+labile.SH     = { center = 4.8, width_hz = 4.0 }
+labile.ArNH   = { center = 4.8, width_hz = 4.0 }
+labile.SO2NH  = { center = 4.8, width_hz = 4.0 }
+labile.oxime  = { center = 4.8, width_hz = 4.0 }
+labile.enol   = { center = 4.8, width_hz = 4.0 }
+
+[acetone]
+display = "acetone-d6"
+residual_1h = [{ shift = 2.05, label = "acetone-d5" }, { shift = 2.84, label = "H2O" }]
+residual_13c = [{ shift = 29.84, label = "acetone-d6" }, { shift = 206.26, label = "acetone-d6" }]
+drop_exchangeable = false
+labile_couples = true
+shift_offset = 0.0
+labile.ROH    = { center = 3.0,  width_hz = 4.5 }
+labile.ArOH   = { center = 8.5,  width_hz = 4.5 }
+labile.COOH   = { center = 11.0, width_hz = 6.0 }
+labile.CONH   = { center = 8.6,  width_hz = 4.5 }
+labile.NH2    = { center = 3.0,  width_hz = 5.5 }
+labile.SH     = { center = 2.2,  width_hz = 4.0 }
+labile.ArNH   = { center = 10.2, width_hz = 4.5 }
+labile.SO2NH  = { center = 9.0,  width_hz = 5.0 }
+labile.oxime  = { center = 10.5, width_hz = 5.0 }
+labile.enol   = { center = 12.5, width_hz = 6.0 }
+
+[C6D6]
+display = "C6D6"
+residual_1h = [{ shift = 7.16, label = "C6D5H" }]
+residual_13c = [{ shift = 128.06, label = "C6D6" }]
+drop_exchangeable = false
+labile_couples = false
+shift_offset = -0.15
+labile.ROH    = { center = 1.5,  width_hz = 5.0 }
+labile.ArOH   = { center = 4.5,  width_hz = 6.0 }
+labile.COOH   = { center = 12.5, width_hz = 8.0 }
+labile.CONH   = { center = 7.0,  width_hz = 6.0 }
+labile.NH2    = { center = 1.2,  width_hz = 6.0 }
+labile.SH     = { center = 1.0,  width_hz = 4.0 }
+labile.ArNH   = { center = 7.8,  width_hz = 7.0 }
+labile.SO2NH  = { center = 5.5,  width_hz = 7.0 }
+labile.oxime  = { center = 8.5,  width_hz = 7.0 }
+labile.enol   = { center = 12.5, width_hz = 8.0 }
+
+[CD3CN]
+display = "CD3CN"
+residual_1h = [{ shift = 1.94, label = "CD2HCN" }, { shift = 2.13, label = "H2O" }]
+residual_13c = [{ shift = 1.32, label = "CD3CN" }, { shift = 118.26, label = "CD3CN" }]
+drop_exchangeable = false
+labile_couples = false
+shift_offset = 0.0
+labile.ROH    = { center = 2.8,  width_hz = 4.5 }
+labile.ArOH   = { center = 7.5,  width_hz = 5.0 }
+labile.COOH   = { center = 11.0, width_hz = 7.0 }
+labile.CONH   = { center = 7.8,  width_hz = 5.0 }
+labile.NH2    = { center = 2.5,  width_hz = 5.5 }
+labile.SH     = { center = 2.0,  width_hz = 4.0 }
+labile.ArNH   = { center = 9.0,  width_hz = 6.0 }
+labile.SO2NH  = { center = 7.5,  width_hz = 6.0 }
+labile.oxime  = { center = 9.8,  width_hz = 6.0 }
+labile.enol   = { center = 12.5, width_hz = 7.0 }
+
+# 溶剂别名 -> 上面的键
+[aliases]
+"CDCl3"      = "CDCl3"
+"chloroform" = "CDCl3"
+"DMSO-d6"    = "DMSO"
+"DMSO"       = "DMSO"
+"dmso"       = "DMSO"
+"CD3OD"      = "MeOD"
+"MeOD"       = "MeOD"
+"methanol-d4" = "MeOD"
+"D2O"        = "D2O"
+"water"      = "D2O"
+"acetone-d6" = "acetone"
+"acetone"    = "acetone"
+"C6D6"       = "C6D6"
+"benzene-d6" = "C6D6"
+"CD3CN"      = "CD3CN"
+"acetonitrile-d3" = "CD3CN"

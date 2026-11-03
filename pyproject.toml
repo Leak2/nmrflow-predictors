@@ -1,0 +1,40 @@
+[build-system]
+# PEP 639（license 用 SPDX 字符串 + license-files）需要 setuptools >= 77
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nmrflow"
+version = "0.3.0"
+description = "SMILES -> NMR 谱图仿真 + 质谱预测 + 文献风格报道值"
+readme = "README.md"
+requires-python = ">=3.13"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Chemistry",
+]
+dependencies = [
+    "rdkit>=2025.3",
+    "numpy>=2.0",
+    "scipy>=1.12",
+    "matplotlib>=3.8",
+    "pandas>=2.2",
+]
+
+[project.optional-dependencies]
+web = ["streamlit>=1.49"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+nmrflow = "nmrflow.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["nmrflow*"]
+
+[tool.setuptools.package-data]
+# *.sqlite 是 HOSE 索引（约 32 MB）。漏了它，pip 安装出来的副本会静默退化成
+# 纯 Tier A；*.txt 是 NMRShiftDB2 的许可证原文与来源声明，按许可 4.2/4.3 必须随数据分发。
+"nmrflow.data" = ["*.toml", "*.sqlite", "*.txt"]

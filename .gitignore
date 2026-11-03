@@ -1,0 +1,11 @@
+runtime/
+results/
+logs/
+*.zip
+NMR-Predictor.exe
+__pycache__/
+*.py[cod]
+.pytest_cache/
+tests/.work/
+.DS_Store
+Thumbs.db

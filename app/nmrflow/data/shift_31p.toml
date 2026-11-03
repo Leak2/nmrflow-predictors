@@ -1,0 +1,304 @@
+# 31P 化学位移（参考 85% H3PO4 外标，低场为正）
+#
+# v0.2.0：补 20 个环境（原表只有 14 条，库内 56% 的 P 原子无表项可命中）。
+# 取值来自 tools/mine_hetero.py 对 NMRShiftDB2 训练集的统计，不含留出集。
+#
+# v0.3.0：所有 width 改用实测半宽 (P90−P10)/2。原来手填的 5~25 普遍偏窄
+# （如 tertiary phosphine 手填 25、实测 38；phosphonic dichloride 填 25、实测 78），
+# 等于把峰画得比数据库里的实际离散更锐，是过度承诺。
+
+version = "0.3.0"
+
+[fallback]
+value = 0.0
+width = 40.0
+confidence = "low"
+note = "未命中环境表，给出宽峰估计而非精确值"
+
+
+[[env]]
+name = "phosphorofluoridate (RO)2P(=O)F"
+smarts = "[PX4](=O)(F)([OX2][#6])[OX2][#6]"
+value = -9.0
+width = 6.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphate triester (P=O)(OR)3"
+smarts = "[PX4](=O)([OX2][#6])([OX2][#6])[OX2][#6]"
+value = 0.0
+width = 9.0
+confidence = "high"
+
+
+[[env]]
+name = "phosphonate diester (P=O)(OR)2R"
+smarts = "[PX4](=O)([OX2][#6])([OX2][#6])[#6]"
+value = 25.0
+width = 10.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphinate (P=O)(OR)R2"
+smarts = "[PX4](=O)([OX2][#6])([#6])[#6]"
+value = 45.0
+width = 22.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphine oxide R3P=O"
+smarts = "[PX4](=O)([#6])([#6])[#6]"
+value = 32.0
+width = 21.0
+confidence = "medium"
+
+
+[[env]]
+name = "H-phosphonate (P=O)(OR)2H"
+smarts = "[PX4]([H])(=O)([OX2])[OX2]"
+value = 8.0
+width = 5.0
+confidence = "medium"
+
+
+[[env]]
+name = "alkylphosphonic acid RP(=O)(OH)2"
+smarts = "[PX4](=O)([OX2H])([OX2H])[#6]"
+value = 25.0
+width = 10.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphoric acid / monoester"
+smarts = "[PX4](=O)([OX2H])([OX2H])"
+value = 0.0
+width = 7.0
+confidence = "medium"
+
+
+[[env]]
+name = "tertiary phosphine R3P"
+smarts = "[PX3]([#6])([#6])[#6]"
+value = -10.0
+width = 38.0
+confidence = "low"
+
+
+[[env]]
+name = "aryl phosphine (PAr3)"
+smarts = "[PX3]([c])([c])[c]"
+value = -6.0
+width = 15.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphonium R4P+"
+smarts = "[PX4+]([#6])([#6])([#6])[#6]"
+value = 22.0
+width = 9.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphorothioate P=S"
+smarts = "[PX4](=[SX1])"
+value = 60.0
+width = 31.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphite P(OR)3"
+smarts = "[PX3]([OX2][#6])([OX2][#6])[OX2][#6]"
+value = 128.0
+width = 12.0
+confidence = "medium"
+
+
+[[env]]
+name = "PF6-"
+smarts = "[PX6-](F)(F)(F)(F)(F)F"
+value = -144.0
+width = 5.0
+confidence = "high"
+
+# ---------------------------------------------------------------------------
+# 以下条目由 tools/mine_hetero.py 从 NMRShiftDB2 **训练集**（非 holdout）统计得出：
+# 每个 value 是该环境类别在库内的位移**中位数**，width 取平均绝对偏差。
+# 加入依据是"用该中位数预测比用兜底常数明显更准"，逐类的 (记录数, 中位MAE, 兜底MAE)
+# 见该脚本输出。留出集不参与取值，因此后面的 A/B 评估是干净的。
+#
+# ★ 顺序即匹配优先级：本段追加在通用条目之后，但下面每条 SMARTS 都把四个取代基
+#   写全了，与前面的条目互斥，所以顺序不影响结果。唯一需要小心的是最后一条
+#   "四碳鎓"——它故意不要求形式电荷，往前放会抢走 phosphonium。
+# ---------------------------------------------------------------------------
+
+
+[[env]]
+name = "phosphoramidate (RO)2P(=O)NR2"
+smarts = "[PX4](=O)([OX2][#6])([OX2][#6])[NX3]"
+value = 3.7
+width = 11.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphorodiamidate (RO)P(=O)(NR2)2"
+smarts = "[PX4](=O)([OX2][#6])([NX3])[NX3]"
+value = 11.0
+width = 12.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphoric triamide OP(NR2)3"
+smarts = "[PX4](=O)([NX3])([NX3])[NX3]"
+value = 10.8
+width = 13.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphonic diamide RP(=O)(NR2)2"
+smarts = "[PX4](=O)([#6])([NX3])[NX3]"
+value = 23.6
+width = 15.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphinamide R2P(=O)NR2"
+smarts = "[PX4](=O)([#6])([#6])[NX3]"
+value = 26.0
+width = 27.0
+confidence = "low"
+
+
+[[env]]
+name = "phosphonamidate RP(=O)(OR)(NR2)"
+smarts = "[PX4](=O)([#6])([OX2][#6])[NX3]"
+value = 25.0
+width = 16.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphonate monoester RP(=O)(OR)(OH)"
+smarts = "[PX4](=O)([#6])([OX2][#6])[OX2H]"
+value = 21.6
+width = 14.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphinic acid R2P(=O)OH"
+smarts = "[PX4](=O)([#6])([#6])[OX2H]"
+value = 30.0
+width = 18.0
+confidence = "low"
+
+
+[[env]]
+name = "phosphonic dichloride RP(=O)Cl2"
+smarts = "[PX4](=O)([#6])([Cl])[Cl]"
+value = 34.0
+width = 78.0
+confidence = "low"
+
+
+[[env]]
+name = "phosphorochloridate (RO)2P(=O)Cl"
+smarts = "[PX4](=O)([OX2][#6])([OX2][#6])[Cl]"
+value = 4.2
+width = 13.0
+confidence = "low"
+
+# ---- P(III) 类：不含 P=O，位移跨度比 P(V) 大得多 ----
+
+
+[[env]]
+name = "phosphoramidite (RO)2P-NR2"
+smarts = "[PX3]([OX2][#6])([OX2][#6])[NX3]"
+value = 139.0
+width = 15.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphonite R-P(OR)2"
+smarts = "[PX3]([#6])([OX2][#6])[OX2][#6]"
+value = 158.0
+width = 77.0
+confidence = "low"
+
+
+[[env]]
+name = "phosphonous diamide R-P(NR2)2"
+smarts = "[PX3]([#6])([NX3])[NX3]"
+value = 83.8
+width = 26.0
+confidence = "medium"
+
+
+[[env]]
+name = "phosphorous triamide P(NR2)3"
+smarts = "[PX3]([NX3])([NX3])[NX3]"
+value = 93.4
+width = 22.0
+confidence = "medium"
+
+
+[[env]]
+name = "aminophosphine R2P-NR2"
+smarts = "[PX3]([#6])([#6])[NX3]"
+value = 52.2
+width = 28.0
+confidence = "low"
+
+# 伯/仲膦：位移极负，兜底常数 0.0 在这里错得最远（分别差 132 / 58 ppm）
+
+[[env]]
+name = "primary phosphine RPH2"
+smarts = "[PX3H2][#6]"
+value = -131.7
+width = 23.0
+confidence = "medium"
+
+
+[[env]]
+name = "secondary phosphine R2PH"
+smarts = "[PX3H1]([#6])[#6]"
+value = -53.7
+width = 23.0
+confidence = "medium"
+
+
+[[env]]
+name = "dichlorophosphine RPCl2"
+smarts = "[PX3]([#6])([Cl])[Cl]"
+value = 160.1
+width = 35.0
+confidence = "medium"
+
+
+[[env]]
+name = "dibromophosphine RPBr2"
+smarts = "[PX3]([#6])([Br])[Br]"
+value = 147.2
+width = 30.0
+confidence = "medium"
+
+# ★ 库里有 317 条记录的形式电荷缺失的 P(IV) 四碳物种（中位 20.4，与鏻盐一致）。
+#   这条故意不写电荷，必须排在 [px4+] 的 phosphonium 之后，否则会抢走鏻盐。
+
+[[env]]
+name = "tetraorganophosphorus (charge not set)"
+smarts = "[PX4]([#6])([#6])([#6])[#6]"
+value = 20.4
+width = 13.0
+confidence = "low"

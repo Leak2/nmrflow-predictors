@@ -1,0 +1,22 @@
+{
+  "title": "nmrflow: SMILES-based NMR/HRMS prediction",
+  "description": "nmrflow predicts 1H/13C (and optional 19F/31P) NMR spectra, literature-style reported values, and HRMS m/z from a SMILES string. Outputs are predictions, not experimental data. Code: BSD-3-Clause. Bundled HOSE index: derivative of NMRShiftDB2 under the nmrshiftdb2 Database License.",
+  "creators": [
+    {
+      "name": "Yu, Jiang Keal"
+    }
+  ],
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "BSD-3-Clause",
+  "version": "0.3.0",
+  "publication_date": "2026-11-03",
+  "keywords": [
+    "NMR",
+    "cheminformatics",
+    "SMILES",
+    "HRMS",
+    "spectrum prediction",
+    "RDKit"
+  ]
+}

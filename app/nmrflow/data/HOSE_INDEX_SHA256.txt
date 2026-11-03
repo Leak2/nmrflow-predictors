@@ -1,0 +1,7 @@
+hose_index.sqlite
+sha256  9581BD5BD9BFD9D5F2337CEC40AF2908E9E60EDBD753BB9D581CF255402ACAA6
+bytes   32538624
+schema  hose(nucleus TEXT, code TEXT, level INTEGER, n INTEGER, sum_shift REAL, sum_sq REAL,
+             PRIMARY KEY (nucleus, code)) WITHOUT ROWID
+rows    328991
+built   NMRShiftDB2 experimental spectra (53,906 records; 19,000+ compounds)

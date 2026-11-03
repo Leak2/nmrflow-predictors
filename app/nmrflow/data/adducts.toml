@@ -1,0 +1,132 @@
+# 加合物注册表
+#
+# mass = mult * M_neutral + Σ(add) - Σ(sub) - charge * ELECTRON_MASS
+# m/z  = mass / |charge|
+#
+# 用原子组成（而不是写死的 delta 质量）来定义加合物，可以避免
+# "质子质量 vs 氢原子质量"(差 0.00055 Da) 这类低级错误。
+
+[[positive]]
+name = "[M+H]+"
+mult = 1
+add = { H = 1 }
+charge = 1
+
+[[positive]]
+name = "[M+Na]+"
+mult = 1
+add = { Na = 1 }
+charge = 1
+
+[[positive]]
+name = "[M+K]+"
+mult = 1
+add = { K = 1 }
+charge = 1
+
+[[positive]]
+name = "[M+Li]+"
+mult = 1
+add = { Li = 1 }
+charge = 1
+
+[[positive]]
+name = "[M+NH4]+"
+mult = 1
+add = { N = 1, H = 4 }
+charge = 1
+
+[[positive]]
+name = "[M+H-H2O]+"
+mult = 1
+add = { H = 1 }
+sub = { H = 2, O = 1 }
+charge = 1
+
+[[positive]]
+name = "[2M+H]+"
+mult = 2
+add = { H = 1 }
+charge = 1
+
+[[positive]]
+name = "[2M+Na]+"
+mult = 2
+add = { Na = 1 }
+charge = 1
+
+[[positive]]
+name = "[M+2H]2+"
+mult = 1
+add = { H = 2 }
+charge = 2
+
+[[positive]]
+name = "M⁺·"
+mult = 1
+charge = 1
+ei_only = true
+
+# 本身已是离子的碎片（例如盐的阳离子/阴离子），不加成任何原子
+[[positive]]
+name = "[M]+"
+mult = 1
+charge = 1
+
+[[negative]]
+name = "[M]-"
+mult = 1
+charge = -1
+
+[[negative]]
+name = "[M-H]-"
+mult = 1
+sub = { H = 1 }
+charge = -1
+
+[[negative]]
+name = "[M+Cl]-"
+mult = 1
+add = { Cl = 1 }
+charge = -1
+
+[[negative]]
+name = "[M+HCOO]-"
+mult = 1
+add = { C = 1, H = 1, O = 2 }
+charge = -1
+
+[[negative]]
+name = "[M+CH3COO]-"
+mult = 1
+add = { C = 2, H = 3, O = 2 }
+charge = -1
+
+[[negative]]
+name = "[M+Na-2H]-"
+mult = 1
+add = { Na = 1 }
+sub = { H = 2 }
+charge = -1
+
+[[negative]]
+name = "[2M-H]-"
+mult = 2
+sub = { H = 1 }
+charge = -1
+
+[[negative]]
+name = "[M-2H]2-"
+mult = 1
+sub = { H = 2 }
+charge = -2
+
+# 电离方式 -> 默认加合物
+[methods]
+DART   = ["[M+H]+"]
+ESI    = ["[M+H]+"]
+APCI   = ["[M+H]+"]
+MALDI  = ["[M+H]+"]
+CI     = ["[M+H]+"]
+EI     = ["M⁺·"]
+FAB    = ["[M+H]+"]

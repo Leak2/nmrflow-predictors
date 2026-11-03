@@ -1,0 +1,261 @@
+# 1H 化学位移经验表（Tier A，参考 TMS，默认溶剂 CDCl3）
+#
+# 用法：
+#   aliphatic : δ = base(CH3/CH2/CH) + Σ 取代基增量(按 α/β/γ 距离)
+#   olefin    : δ = 5.25 + Zgem + Zcis + Ztrans（Pascual-Meier-Simon 参数）
+#   aromatic  : δ = 7.26 + Σ 取代基的 o/m/p 增量
+#   heteroaromatic : 整环位点基准值；被取代时按苯环增量 ×0.7 修正并降级置信度
+#
+# 取代基 SMARTS 的第一个原子就是"连接点"（即与观测碳/β碳/γ碳直接相连的原子）
+
+version = "0.1.0"
+source = "Pretsch 4th ed.; Pascual-Meier-Simon; SDBS 经验值"
+
+[fallback]
+on_missing_subst = "generic"
+penalty = 0.35
+generic_increment = 0.30
+
+# ---------------------------------------------------------------------------
+[aliphatic.base]
+CH3 = 0.87
+CH2 = 1.20
+CH  = 1.55
+CH_ring3 = 0.30      # 环丙烷
+CH_ring4 = 2.00
+CH_ring5 = 1.75
+CH_ring6 = 1.60
+
+[aliphatic.subst]
+# 名称 = { a = α 增量, b = β 增量, g = γ 增量, smarts = 连接点匹配式 }
+alkyl       = { a = 0.00, b = 0.00, g = 0.00, smarts = "[CX4;!$([CX4](F)(F)F)]" }
+OH          = { a = 2.30, b = 0.35, g = -0.05, smarts = "[OX2H]" }
+OR          = { a = 2.40, b = 0.35, g = -0.05, smarts = "[OX2;H0][#6]" }
+OAr         = { a = 2.70, b = 0.40, g = -0.05, smarts = "[OX2;H0][c]" }
+OCOR        = { a = 3.10, b = 0.40, g =  0.00, smarts = "[OX2][CX3]=[OX1]", prio = 2 }
+OCOAr       = { a = 3.20, b = 0.45, g =  0.00, smarts = "[OX2][CX3]=[OX1]", prio = 1 }
+OSO2R       = { a = 3.00, b = 0.45, g =  0.00, smarts = "[OX2][SX4](=[OX1])(=[OX1])", prio = 2 }
+OPO3R       = { a = 2.90, b = 0.40, g =  0.00, smarts = "[OX2][PX4]", prio = 2 }
+CHO         = { a = 1.30, b = 0.30, g =  0.00, smarts = "[CX3H1]=[OX1]", prio = 2 }
+COR         = { a = 1.25, b = 0.30, g =  0.00, smarts = "[CX3;H0]=[OX1]", prio = 1 }
+COAr        = { a = 1.35, b = 0.35, g =  0.00, smarts = "[CX3](=[OX1])[c]", prio = 2 }
+COOH        = { a = 1.15, b = 0.30, g =  0.00, smarts = "[CX3](=[OX1])[OX2H]", prio = 2 }
+COOR        = { a = 1.15, b = 0.30, g =  0.00, smarts = "[CX3](=[OX1])[OX2;H0]", prio = 2 }
+CONR2       = { a = 1.20, b = 0.25, g =  0.00, smarts = "[CX3](=[OX1])[NX3]", prio = 2 }
+COCl        = { a = 1.40, b = 0.35, g =  0.00, smarts = "[CX3](=[OX1])[ClX1]" }
+CN          = { a = 1.30, b = 0.30, g =  0.00, smarts = "[CX2]#[NX1]" }
+Ar          = { a = 1.40, b = 0.35, g =  0.10, smarts = "[c]" }
+Ar_hetero   = { a = 1.30, b = 0.30, g =  0.10, smarts = "[c;$(c[n,o,s])]" }
+# N-甲基 / N-亚甲基：必须排在 NH2 / NHR / NR2 之前，否则 N-CH3 会被漏判
+N_imide     = { a = 2.70, b = 0.35, g =  0.00, smarts = "[NX3;$(N([CX3]=[OX1])[CX3]=[OX1])]", prio = 3 }
+N_amide     = { a = 2.00, b = 0.30, g =  0.00, smarts = "[NX3;$(N[CX3]=[OX1])]", prio = 3 }
+N_aromatic  = { a = 2.55, b = 0.30, g =  0.00, smarts = "[nX3;H0]", prio = 3 }
+NH2         = { a = 1.60, b = 0.15, g = -0.05, smarts = "[NX3;H2;!$(N[a])]" }
+NHR         = { a = 1.70, b = 0.20, g = -0.05, smarts = "[NX3;H1;!$(N[a]);!$(N[CX3]=[OX1])]" }
+NR2         = { a = 1.75, b = 0.20, g = -0.05, smarts = "[NX3;H0;!$(N[a]);!$(N[CX3]=[OX1])]" }
+NHAc        = { a = 2.00, b = 0.25, g =  0.00, smarts = "[NX3][CX3]=[OX1]" }
+NR3p        = { a = 2.10, b = 0.35, g =  0.00, smarts = "[NX4+]" }
+NO2         = { a = 3.50, b = 0.60, g =  0.00, smarts = "[NX3+](=[OX1])[O-]" }
+F           = { a = 3.20, b = 0.35, g =  0.00, smarts = "[F;$(F[CX4])]" }
+CF3         = { a = 1.10, b = 0.30, g =  0.00, smarts = "[CX4](F)(F)F" }
+CF2         = { a = 1.60, b = 0.35, g =  0.00, smarts = "[CX4;H1,H2](F)F" }
+Cl          = { a = 2.20, b = 0.40, g = -0.05, smarts = "[Cl;$(Cl[CX4])]" }
+Br          = { a = 1.90, b = 0.40, g = -0.05, smarts = "[Br;$(Br[CX4])]" }
+I           = { a = 1.60, b = 0.40, g = -0.05, smarts = "[I;$(I[CX4])]" }
+# 注意：对称 SMARTS（如 [CX3]=[CX3]）在 RDKit 中只返回一个方向的匹配，
+# 会漏判连接点，因此改写为单原子递归查询
+CeqC        = { a = 0.80, b = 0.20, g =  0.00, smarts = "[CX3;$(C=[CX3])]" }
+CecC        = { a = 0.90, b = 0.20, g =  0.00, smarts = "[CX2;$(C#[CX2])]" }
+alkynyl_H   = { a = 0.00, b = 0.00, g =  0.00, smarts = "[CX2]#[CX2H]" }
+SH          = { a = 1.30, b = 0.25, g =  0.00, smarts = "[SX2H]" }
+SR          = { a = 1.40, b = 0.25, g =  0.00, smarts = "[SX2;H0]" }
+SOR_SO2R    = { a = 2.30, b = 0.40, g =  0.00, smarts = "[SX3,SX4]" }
+PR2         = { a = 0.70, b = 0.20, g =  0.00, smarts = "[PX3]" }
+POR         = { a = 1.20, b = 0.30, g =  0.00, smarts = "[PX4]" }
+SiR3        = { a = -0.30, b = 0.10, g = 0.00, smarts = "[SiX4]" }
+
+# ---------------------------------------------------------------------------
+[olefin]
+base = 5.25
+
+[olefin.pms]
+# Pascual-Meier-Simon：δ = 5.25 + Zgem + Zcis + Ztrans
+alkyl   = { gem = 0.44, cis = -0.26, trans = -0.29, smarts = "[CX4]" }
+CH2OR   = { gem = 0.64, cis = -0.01, trans = -0.02, smarts = "[CX4][OX2]" }
+OR      = { gem = 1.18, cis = -1.06, trans = -1.28, smarts = "[OX2;H0]" }
+OCOR    = { gem = 2.09, cis = -0.35, trans = -0.64, smarts = "[OX2][CX3]=[OX1]" }
+Cl      = { gem = 1.00, cis =  0.19, trans =  0.03, smarts = "[Cl]" }
+Br      = { gem = 1.04, cis =  0.40, trans =  0.55, smarts = "[Br]" }
+I       = { gem = 1.14, cis =  0.68, trans =  0.88, smarts = "[I]" }
+Ph      = { gem = 1.35, cis =  0.37, trans =  0.11, smarts = "[c]" }
+CN      = { gem = 0.23, cis =  0.78, trans =  0.58, smarts = "[CX2]#[NX1]" }
+CHO     = { gem = 1.03, cis =  0.97, trans =  1.21, smarts = "[CX3H1]=[OX1]" }
+COR     = { gem = 1.10, cis =  1.13, trans =  0.81, smarts = "[CX3;H0]=[OX1]" }
+COOH    = { gem = 1.00, cis =  1.35, trans =  0.74, smarts = "[CX3](=[OX1])[OX2H]" }
+COOR    = { gem = 0.82, cis =  1.15, trans =  0.91, smarts = "[CX3](=[OX1])[OX2;H0]" }
+CONR2   = { gem = 0.90, cis =  0.95, trans =  0.62, smarts = "[CX3](=[OX1])[NX3]" }
+NR2     = { gem = 0.69, cis = -0.64, trans = -0.75, smarts = "[NX3]" }
+SR      = { gem = 0.75, cis = -0.10, trans = -0.15, smarts = "[SX2]" }
+
+# ---------------------------------------------------------------------------
+[special]
+aldehyde     = 9.70
+aldehyde_Ar  = 10.00
+carboxyl     = 11.00
+formamide_H  = 8.05     # HCONR2：甲酰氢在高场，不能用醛的 9.70
+formate_H    = 8.10     # HCOOR
+alkyne_CH    = 2.40
+cyclopropane = 0.30
+
+# 芳环上的 n-CH3：加和法只会把 N 当成一个普通取代基，
+# 但酰胺型 N（邻位有羰基）的甲基会明显往高场走。按邻接羰基数分三档。
+[special.n_methyl_aromatic]
+two_carbonyl = 3.40      # 咖啡因 N1/N3 型（酰亚胺）
+one_carbonyl = 3.60      # 内酰胺 N-CH3
+none         = 3.90      # 咪唑 / 吡咯 / 三唑的 N-CH3
+
+# ---------------------------------------------------------------------------
+[aromatic]
+base = 7.26
+
+[aromatic.subst]
+# 相对苯的 o/m/p 增量
+CH3     = { o = -0.17, m = -0.09, p = -0.17, smarts = "[CX4;H3]" }
+alkyl   = { o = -0.14, m = -0.06, p = -0.17, smarts = "[CX4;!H3;!$([CX4](F)(F)F)]" }
+CH2Cl   = { o =  0.06, m =  0.00, p = -0.08, smarts = "[CX4;H2][Cl]" }
+CF3     = { o =  0.30, m =  0.15, p =  0.20, smarts = "[CX4](F)(F)F" }
+CH2OH   = { o = -0.07, m = -0.07, p = -0.07, smarts = "[CX4;H2][OX2H]" }
+F       = { o = -0.26, m =  0.00, p = -0.20, smarts = "[F]" }
+Cl      = { o =  0.02, m = -0.06, p = -0.18, smarts = "[Cl]" }
+Br      = { o =  0.15, m = -0.08, p = -0.15, smarts = "[Br]" }
+I       = { o =  0.30, m = -0.10, p = -0.10, smarts = "[I]" }
+OH      = { o = -0.56, m = -0.12, p = -0.45, smarts = "[OX2H]" }
+OMe     = { o = -0.48, m =  0.11, p = -0.43, smarts = "[OX2;H0][#6]" }
+OAr     = { o = -0.30, m =  0.05, p = -0.30, smarts = "[OX2;H0][c]" }
+OAc     = { o = -0.25, m =  0.03, p = -0.20, smarts = "[OX2][CX3]=[OX1]" }
+NH2     = { o = -0.75, m = -0.25, p = -0.65, smarts = "[NX3;H2]" }
+NHR     = { o = -0.80, m = -0.25, p = -0.65, smarts = "[NX3;H1;!$(N[CX3]=[OX1])]" }
+NR2     = { o = -0.60, m = -0.10, p = -0.62, smarts = "[NX3;H0;!$(N[CX3]=[OX1])]" }
+NHAc    = { o = -0.30, m = -0.10, p = -0.25, smarts = "[NX3][CX3]=[OX1]" }
+NO2     = { o =  0.95, m =  0.26, p =  0.38, smarts = "[NX3+](=[OX1])[O-]" }
+CN      = { o =  0.36, m =  0.18, p =  0.28, smarts = "[CX2]#[NX1]" }
+CHO     = { o =  0.56, m =  0.22, p =  0.29, smarts = "[CX3H1]=[OX1]" }
+COR     = { o =  0.62, m =  0.14, p =  0.21, smarts = "[CX3;H0]=[OX1]" }
+COOH    = { o =  0.85, m =  0.18, p =  0.27, smarts = "[CX3](=[OX1])[OX2H]" }
+COOR    = { o =  0.74, m =  0.15, p =  0.27, smarts = "[CX3](=[OX1])[OX2;H0]" }
+CONR2   = { o =  0.61, m =  0.10, p =  0.17, smarts = "[CX3](=[OX1])[NX3]" }
+COCl    = { o =  0.90, m =  0.20, p =  0.30, smarts = "[CX3](=[OX1])[Cl]" }
+Ph      = { o =  0.18, m =  0.00, p =  0.08, smarts = "[c]" }
+SO2R    = { o =  0.60, m =  0.25, p =  0.33, smarts = "[SX4](=[OX1])(=[OX1])" }
+# 锍盐 S+：强吸电子，Ph3S+ 的邻/间/对在 7.7~7.6 一线
+Splus   = { o =  0.45, m =  0.38, p =  0.32, smarts = "[SX3;+]" }
+# 芳基磺酸酯 Ar-O-SO2-R：取代基起点是**氧**（环上连的原子）
+OSO2R   = { o =  0.28, m =  0.10, p =  0.12, smarts = "[OX2;H0][SX4](=[OX1])(=[OX1])" }
+SR      = { o = -0.08, m = -0.05, p = -0.15, smarts = "[SX2]" }
+SH      = { o = -0.10, m = -0.10, p = -0.20, smarts = "[SX2H]" }
+vinyl   = { o =  0.06, m = -0.03, p = -0.10, smarts = "[CX3;$(C=[CX3])]" }
+POR     = { o =  0.30, m =  0.10, p =  0.20, smarts = "[PX4]" }
+
+# 多取代时的置信度惩罚规则
+[aromatic.penalty]
+ortho_disubstituted = 1        # 任意两个取代基相邻 -> 降 1 级
+tri_substituted_123 = 1        # 1,2,3-三取代
+push_pull = 1                  # 强给电子 + 强吸电子共存
+push_list = ["NH2", "NHR", "NR2", "NHAc", "OMe", "OH", "OAc"]
+pull_list = ["NO2", "CN", "CHO", "COR", "COOH", "COOR"]
+
+# ---------------------------------------------------------------------------
+# 杂环：整环位点基准值。shifts 按 SMARTS 中原子书写顺序，0.0 = 该位无 H / 未定义
+[[heteroaromatic]]
+name = "pyridine"
+smarts = "n1ccccc1"
+shifts = [0.0, 8.50, 7.16, 7.55, 7.16, 8.50]
+
+[[heteroaromatic]]
+name = "pyridazine"
+smarts = "n1ncccc1"
+shifts = [0.0, 0.0, 9.17, 7.48, 7.48, 9.17]
+
+[[heteroaromatic]]
+name = "pyrimidine"
+smarts = "n1cnccc1"
+shifts = [0.0, 9.26, 0.0, 8.78, 7.36, 8.78]
+
+[[heteroaromatic]]
+name = "pyrazine"
+smarts = "n1ccncc1"
+shifts = [0.0, 8.60, 8.60, 0.0, 8.60, 8.60]
+
+[[heteroaromatic]]
+name = "furan"
+smarts = "o1cccc1"
+shifts = [0.0, 7.40, 6.30, 6.30, 7.40]
+
+[[heteroaromatic]]
+name = "thiophene"
+smarts = "s1cccc1"
+shifts = [0.0, 7.30, 7.10, 7.10, 7.30]
+
+[[heteroaromatic]]
+name = "pyrrole"
+smarts = "[nH]1cccc1"
+shifts = [0.0, 6.70, 6.10, 6.10, 6.70]
+
+[[heteroaromatic]]
+name = "imidazole"
+smarts = "[nH]1cncc1"
+shifts = [0.0, 7.73, 0.0, 7.10, 7.10]
+
+[[heteroaromatic]]
+name = "oxazole"
+smarts = "o1cncc1"
+shifts = [0.0, 8.05, 0.0, 7.09, 7.70]
+
+[[heteroaromatic]]
+name = "thiazole"
+smarts = "s1cncc1"
+shifts = [0.0, 8.88, 0.0, 7.93, 7.40]
+
+[[heteroaromatic]]
+name = "pyrazole"
+smarts = "[nH]1nccc1"
+shifts = [0.0, 0.0, 7.61, 6.32, 7.61]
+
+# 注意稠环写法：环号必须落在同一个原子上（...ccccc12），否则 5 元环会写错
+[[heteroaromatic]]
+name = "indole"
+smarts = "[nH]1ccc2ccccc12"
+shifts = [0.0, 7.20, 6.50, 0.0, 7.60, 7.10, 7.15, 7.40, 0.0]
+
+[[heteroaromatic]]
+name = "benzofuran"
+smarts = "o1ccc2ccccc12"
+shifts = [0.0, 7.66, 6.75, 0.0, 7.60, 7.22, 7.30, 7.50, 0.0]
+
+[[heteroaromatic]]
+name = "benzothiophene"
+smarts = "s1ccc2ccccc12"
+shifts = [0.0, 7.42, 7.33, 0.0, 7.80, 7.30, 7.30, 7.90, 0.0]
+
+[[heteroaromatic]]
+name = "quinoline"
+smarts = "n1cccc2ccccc12"
+shifts = [0.0, 8.90, 7.35, 8.10, 0.0, 8.05, 7.60, 7.70, 8.10, 0.0]
+
+[[heteroaromatic]]
+name = "isoquinoline"
+# 位点顺序：0=C4, 1=C3, 2=N2, 3=C1, 4=C8a, 5=C8, 6=C7, 7=C6, 8=C5, 9=C4a
+smarts = "c1cncc2ccccc12"
+shifts = [7.62, 8.51, 0.0, 9.24, 0.0, 7.94, 7.66, 7.56, 7.78, 0.0]
+
+[heteroaromatic_fallback]
+# 未命中整环表时的粗略估计（置信度 low）
+base = 7.26
+alpha_ring_N   =  0.55
+meta_ring_N    =  0.15
+alpha_ring_O   = -0.35
+alpha_ring_S   = -0.10
+alpha_ring_NH  = -0.30
+subst_scale    = 0.70     # 苯环取代基增量在此按比例缩放
+# 被两个环内 N 夹住的 CH（嘌呤 C8-H、咪唑 C2-H 一类）直接取此值，不再累加
+flanked_by_two_N = 7.80

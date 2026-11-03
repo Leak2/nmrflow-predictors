@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use nmrflow in academic work, please cite this software and its version."
+title: "nmrflow: SMILES-based NMR/HRMS prediction"
+type: software
+authors:
+  - family-names: "Yu"
+    given-names: "Jiang Keal"
+version: "0.3.0"
+date-released: "2026-11-03"
+license: "BSD-3-Clause"
+abstract: >-
+  nmrflow predicts 1H/13C (and optional 19F/31P) NMR spectra, literature-style
+  reported values, and HRMS m/z from a SMILES string. Outputs are predictions,
+  not experimental data. The code is BSD-3-Clause; the bundled HOSE index is a
+  derivative of NMRShiftDB2 and is distributed under the nmrshiftdb2 Database
+  License.
+keywords:
+  - NMR
+  - cheminformatics
+  - SMILES
+  - HRMS
+  - spectrum prediction
+  - RDKit

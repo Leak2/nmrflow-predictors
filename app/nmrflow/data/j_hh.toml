@@ -1,0 +1,74 @@
+# 1H-1H 耦合常数经验表（Hz）
+
+version = "0.1.0"
+
+# --- 同碳耦合 2J(H-C-H) -----------------------------------------------------
+# 基准值 + 按碳上另外两个取代基类型的修正（取最负的那个）
+[geminal_2J]
+base = -12.5
+# 烯烃末端 =CH2 的偕偶是**小的正值**（乙烯 2.5、苯乙烯 1.0），
+# 绝不能套用 sp3 的 -12.5 / 苄位的 -15，否则会裂出几十 Hz 的假双峰
+alkene_terminal = 2.0
+[geminal_2J.modifier]
+sp2_or_aryl = -15.0      # 烯丙位 / 苄位 CH2
+carbonyl    = -16.5      # α-羰基 CH2（最负）
+oxygen      = -10.5
+nitrogen    = -12.0
+sulfur      = -12.5
+halogen     = -12.0
+[geminal_2J.ring]
+"3" = -8.0               # 环丙烷（张力使 2J 变小，甚至变正）
+"4" = -11.0
+"5" = -12.5
+"6" = -12.8
+
+# --- 邻位耦合 3J(H-C-C-H) ---------------------------------------------------
+[vicinal_3J]
+free_rotation = 7.0      # 开链 sp3-sp3，构象平均
+cyclic_aa     = 11.0     # 环己烷 直立-直立
+cyclic_ae     = 3.5
+aldehyde      = 2.9       # CH3-CHO 之类的 3J（H-C(=O)-C-H）
+cyclic_ee     = 2.5
+alkene_cis    = 10.5
+alkene_trans  = 17.0
+alkyne_allylic = 2.0
+
+# --- 芳环（按环内距离）------------------------------------------------------
+[aromatic_J]
+"1" = 7.7                # 邻位 3J
+"2" = 1.6                # 间位 4J
+"3" = 0.6                # 对位 5J
+
+# 芳环邻位 3J 的取代基修正（只在六元环上用）
+[aromatic_J.ortho_mod]
+electron_withdrawing = 0.4
+electron_donating    = -0.3
+
+# --- 五元杂环的环内 J（六元杂环仍用 aromatic_J）-----------------------------
+# adjacent = 相邻两个环碳；skip = 隔一个碳（1,3-关系）
+[ring5_J]
+furan      = { adjacent = 1.9, skip = 1.2 }
+thiophene  = { adjacent = 4.6, skip = 1.6 }
+pyrrole    = { adjacent = 2.8, skip = 1.6 }
+imidazole  = { adjacent = 1.4, skip = 1.0 }
+oxazole    = { adjacent = 1.6, skip = 1.0 }
+thiazole   = { adjacent = 3.2, skip = 1.0 }
+pyrazole   = { adjacent = 2.1, skip = 1.2 }
+default    = { adjacent = 3.0, skip = 1.4 }
+
+# --- 长程 4J ---------------------------------------------------------------
+[long_range_4J]
+allylic   = -1.5         # H-C=C-C-H
+propargylic = 2.0
+aromatic_meta = 1.6
+aromatic_para = 0.6
+w_coupling = 1.5         # 刚性 W 型骨架（仅环系内近似使用）
+saturated = 0.0          # 饱和链 4J ≈ 0，忽略
+
+# --- Karplus 参数（Phase 7 构象启用时使用）----------------------------------
+[karplus]
+A = 7.76
+B = -1.10
+C = 1.40
+# 取代基电负性修正（Haasnoot 简化）
+electronegativity_correction = -0.6

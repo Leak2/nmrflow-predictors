@@ -1,0 +1,38 @@
+nmrflow · HOSE 索引的来源与许可声明
+====================================
+
+本目录下的 hose_index.sqlite（若存在）是从 NMRShiftDB2 的实验谱数据派生的
+HOSE 球形环境位移索引，由 tools/build_hose_index.py 生成。
+
+数据来源
+--------
+NMRShiftDB2（https://nmrshiftdb.nmr.uni-koeln.de/），数据文件
+nmrshiftdb2withsignals.sd（151 MB），通过 SourceForge 的 nmrshiftdb2/data 目录
+公开下载，无需注册或认证。
+
+索引内容
+--------
+每个 (核素, HOSE 码) 一行，只保存聚合统计量 (n, Σδ, Σδ²)，
+不包含任何原始化合物流或谱图数据。分子结构与位移的对应关系无法从索引还原。
+
+许可
+----
+数据依 nmrshiftdb2 Database License 提供，全文见同目录的
+nmrshiftdb2_database_license.txt。要点：
+
+- 3.1 允许商业使用，不限领域。
+- 4.2/4.3 公开传输时须附许可证副本或 URI；公开使用产出物时须带下列声明。
+- 4.4/4.7 衍生数据库按相同许可共享，并须向接收者免费提供衍生库或其生成算法。
+- 4.5 依赖该库实现功能的软件必须使用 OSI 认可的开源许可。
+
+按 4.3 的要求，使用本索引产生的结果应附带以下声明：
+
+    Contains information from nmrshiftdb2 (www.nmrshiftdb.org),
+    which is available here under the nmrshiftdb2 Database License.
+
+重新生成
+--------
+    python tools/build_hose_index.py --sd /path/to/nmrshiftdb2withsignals.sd \
+        --out nmrflow/data/hose_index.sqlite
+
+索引体积约 31 MB（gzip 后 7 MB），构建约 6 分钟。

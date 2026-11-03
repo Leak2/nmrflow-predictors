@@ -1,0 +1,162 @@
+# 异核耦合常数（Hz），按"键数"索引
+#
+# 1 = 直接相连（1J），2 = 隔一个原子（2J），以此类推
+
+version = "0.1.0"
+
+# 耦合路径「绕出芳环到 sp3 碳」时的衰减系数。
+# 典型：Ar-CF3 的 H-F —— 实测不可分辨，而 Ar-F 的邻位 H-F 有 9 Hz。
+[aromatic_exit_damping]
+H_F = 0.03
+H_P = 0.03
+
+# --- 13C - 19F -------------------------------------------------------------
+[C_F]
+"1" = 245.0
+"2" = 32.0
+"3" = 3.7
+"4" = 1.4
+"5" = 0.6
+
+[[C_F.override]]
+name = "CF3-SO2 1J"
+# 三氟甲磺酰/三氟甲磺酸酯：1J(C-F) 约 318~322 Hz，远大于 Ar-CF3 的 272
+smarts = "F[CX4](F)(F)[SX4](=O)(=O)"
+bonds = 1
+value = 320.0
+
+[[C_F.override]]
+name = "CF3 1J"
+# 样例分子 C27H26F3N5S 的 13C 报道值就是 q, JC-F = 272.6 Hz
+smarts = "F[CX4](F)(F)[#6]"
+bonds = 1
+value = 272.6
+
+[[C_F.override]]
+name = "Rf CF2 1J"
+# 全氟亚甲基（邻位碳也带 F）：1J(C-F) 约 285~295 Hz
+smarts = "F[CX4](F)[#6][F]"
+bonds = 1
+value = 290.0
+
+[[C_F.override]]
+name = "CF2 1J"
+smarts = "F[CX4](F)([#6])[#6]"
+bonds = 1
+value = 245.0
+
+[[C_F.override]]
+name = "Ar-F 1J"
+smarts = "F[c]"
+bonds = 1
+value = 245.0
+
+[[C_F.override]]
+name = "CHF 1J"
+smarts = "F[CX4;H1]"
+bonds = 1
+value = 185.0
+
+# --- 13C - 31P -------------------------------------------------------------
+[C_P]
+"1" = 100.0
+"2" = 7.0
+"3" = 6.0
+"4" = 2.0
+
+[[C_P.override]]
+name = "P-O-CH3 2J"
+smarts = "[PX4][OX2][CX4]"
+bonds = 2
+value = 6.0
+
+[[C_P.override]]
+name = "Ar-P 1J"
+smarts = "[PX3,PX4][c]"
+bonds = 1
+value = 130.0
+
+[[C_P.override]]
+name = "P-CH3 1J"
+smarts = "[PX3,PX4][CX4;H3]"
+bonds = 1
+value = 70.0
+
+# --- 1H - 19F --------------------------------------------------------------
+[H_F]
+"2" = 48.0
+"3" = 20.0
+"4" = 2.0
+"5" = 0.5
+
+# 走芳香环的 H-F：氟苯实测 邻 9.0 / 间 5.7 / 对 1.7 Hz
+[H_F.aromatic]
+"3" = 9.0
+"4" = 5.7
+"5" = 1.7
+
+[[H_F.override]]
+name = "CH2F 2J"
+smarts = "F[CX4;H2]"
+bonds = 2
+value = 47.0
+
+[[H_F.override]]
+name = "CHF2 2J"
+smarts = "F[CX4;H1]F"
+bonds = 2
+value = 54.0
+
+# --- 1H - 31P --------------------------------------------------------------
+[H_P]
+"1" = 650.0       # P-H 直接相连，巨大的双峰
+"2" = 15.0        # P-CH
+"3" = 11.0        # P-O-CH3 / P-O-CH2-
+"4" = 1.0
+
+[[H_P.override]]
+name = "P-CH3 2J"
+smarts = "[PX3,PX4][CX4;H3]"
+bonds = 2
+value = 17.0
+
+[[H_P.override]]
+name = "P-O-CH 3J"
+smarts = "[PX4][OX2][CX4]"
+bonds = 3
+value = 11.0
+
+# --- 19F - 19F -------------------------------------------------------------
+[F_F]
+"2" = 200.0       # 同碳偕 F-F 极大
+"3" = 12.0
+"4" = 5.0
+"5" = 2.0
+
+[[F_F.override]]
+name = "R-SO2F 与 CF2 之间"
+# F-S-C-F 同样是 3 根键，但隔着三中心四电子体系，偶合只有 5~6 Hz
+# （CF3SO2F 实测 4J(FF) ~ 5.5），不能套用 F-C-C-F 的 12 Hz。
+smarts = "F[SX4](=O)(=O)[CX4](F)"
+bonds = 3
+value = 5.5
+
+# --- 31P - 19F -------------------------------------------------------------
+[P_F]
+"1" = 710.0       # PF6- 呈 septet
+"2" = 50.0
+"3" = 5.0
+
+[[P_F.override]]
+name = "P(V)=O-F 1J"
+# P(=O)(OR)2F 的 1J(P-F) 约 1000 Hz，比 PF6- 的 710 大得多
+smarts = "[PX4](=O)F"
+bonds = 1
+value = 1000.0
+
+# --- 31P - 31P -------------------------------------------------------------
+[P_P]
+"1" = 220.0
+"2" = 20.0
+"3" = 8.0
+"4" = 3.0
