@@ -51,8 +51,8 @@ nmrflow 输出的是**预测**，不是实验数据；默认只给 `Calculated`�
 的四条线砍成两条（强度又被重新归一化，总积分看着正常）。现在改为每个自旋自己的 `Σ|J|`，
 并把强度归一化移到所有过滤之后。`tests/test_spin.py` 有 AX 与 AB 两条回归钉住。
 
-测试分两套：仓库 `pytest tests`（**258 条**）；便携包内 `tests/run_tests.py`（36 条，
-stdlib unittest，覆盖交付行为）。包内那 36 条现在也由仓库 pytest 执行，避免两边分离。
+测试：本源码归档内只有 `tests/run_tests.py` / `tests/test_regressions.py` 的 **36 条**
+stdlib unittest（覆盖交付行为）。完整开发期测试集没有随此源码归档，详见 §7。
 
 ## 1. 安装
 
@@ -811,45 +811,18 @@ confidence = "medium"
 
 ## 7. 测试
 
+本源码归档只包含交付级回归：
+
 ```bash
 python -m pytest tests/ -q
 ```
 
-- `tests/test_ms.py`：精确质量（含用户样例 `C27H26F3N5S → 510.1934`）、Cl/Br 同位素特征比。
-- `tests/test_spin.py`：帕斯卡三角、核频锚定、四重峰强度、**AB 体系数值解 vs 解析解**、场强依赖的强耦合判据。
-- `tests/test_pipeline.py`：元素自动探测、报道值形态、golden 位移集、多重度命名、CF₃ 碳的四重峰、PhCF₃ 的 ¹⁹F 单峰、JC-F/JC-P 记号、咖啡因三个 N-CH₃ 的分档。
-  （这组守的是 **Tier A** 的行为，因此统一用 `_opt()` 显式 `tier_b=False`——
-  否则结果会依赖 `build/` 下有没有索引。）
-- `tests/test_hose.py`：HOSE 码的前缀性质、对称同码、编号无关、非对映异位氢同码。
-- `tests/test_hose_index.py`：前缀范围扫描、逐层降级、支持数兜底、核间隔离。
-- `tests/test_shift_hose.py`：球层降级门槛、σ 只降级不否决、非对映异位分裂保留、
-  活泼氢不覆盖、端到端接线与索引缺失时的静默降级。
-- `tests/test_shift_19f.py`：CF₃-sp² / CF₃X 新条目、`N-CF3` 放宽到亚胺氮、
-  **CF₃ 三个氟逐个都要能匹配**（`uniquify` 回归护栏）、未覆盖环境必须 low + 宽峰。
-- `tests/test_shift_31p.py`：34 条环境逐条命中（防串味）、鏻盐不被"四碳鎓"抢走、
-  伯/仲膦与 P(III) 卤代物的取值方向、宽类别不得把 width 改窄。
-- `tests/test_hose_hetero.py`：¹⁹F/³¹P 的球层门槛（¹⁹F 取 2、³¹P 取 1）、置信度封顶、
-  MAE 标定表防改、浅层 ¹⁹F 命中必须被拒、深层命中才覆盖。
-- `tests/test_app.py`：Streamlit 界面冒烟测试（脚本渲染 + 点击出图 + 非法 SMILES 兜底）。
-- `tests/test_shift_13c_sp3.py`：六种环烷逐一钉住、开链不受环项影响、环修正与杂原子
-  增量叠加、多环取最小环、羧基氧不重复计数；另有一条**记录环烯烯丙位残差**的用例
-  （当前 abs=5.0，修好后应收紧到 1.5）。
-- `tests/test_shift_13c_sp2.py`：烯碳两端加和（甲基乙烯基醚两端差 67 ppm）、
-  烯碳不标 high、β 增量饱和、π 项不打折会超 5 ppm、稠环桥头不是单环苯碳、
-  共轭羰基低 4 ppm。—— 这组是"125.0 一刀切"那个缺陷的直接护栏。
-  它能在 96 个测试全绿的年代活下来，就是因为没有任何用例碰过烯碳。
-- `tests/test_regressions.py`：交付行为 + 评估套件的三条护栏（`app/tools/*.py` 能
-  `--help` 跑通、`check_eval_kit --quick` 全 PASS、把训练索引指向全量索引时
-  **自检必须失败**）。最后一条是给"守卫"本身加的守卫：一个永远返回 0 的自检，
-  比没有自检更糟。
-- `tests/test_reference_records.py`：`check_reference_records` 的判据——trans 记录 PASS、
-  只有 cis 时不算通过、0.2.3 的 34.5/26.9/26.3 落到 cis 区间、把 C7 写成 24.5 必须 FAIL。
-- `tests/test_version_info.py`：exe 版本资源的三个易坏点——版本号只有
-  `nmrflow.__version__` 一个来源、生成文件必须**纯 ASCII**（中文走 `\uXXXX`，
-  否则 PyInstaller 可能按 cp1252/cp936 解码）、`0.2.7` 补成四段 `0.2.7.0`
-  （`0.2.8rc1` 不能被抽成 `0.2.8.1`）。
+- `tests/test_regressions.py`：36 条 stdlib unittest，覆盖 CLI/GUI 交付行为、PNG metadata、
+  JSON provenance、manifest、HOSE 等；
+- `tests/run_tests.py`：同一组测试的便携入口。
 
----
+完整开发期测试（包含 `test_app.py` 等约 258 条）**没有随此源码归档**；如果你是从开发仓库获取，
+那里另有完整测试集。这里不再逐项列出未随包文件，避免“声称有、实际没有”。
 
 ## 8. 目录
 

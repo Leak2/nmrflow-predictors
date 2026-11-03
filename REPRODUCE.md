@@ -32,8 +32,8 @@ cd nmrflow-0.3.0-portable
 - **评估套件本身**：`app/tools/*.py` 能 import（`--help` 跑通）、
   `check_eval_kit --quick` 九项全 PASS、以及把训练索引指向全量索引时自检必须报错
 
-GUI 的批量模式 / 结构预览 / ZIP 下载用 Streamlit `AppTest` 验证（`tests/test_app.py`，11 条），
-依赖 Streamlit，不在上面 36 项核心回归里；它需要开发环境的 pytest，便携包不带。
+GUI 的批量模式 / 结构预览 / ZIP 下载在开发仓库里有 AppTest；该测试文件**没有随此源码归档**，
+本归档只带上面 36 条交付级回归，不声称包含完整开发测试集。
 
 ### 索引完整性
 
@@ -120,8 +120,8 @@ sha256   0E86688360E23C88CCF0EB82A1251315FA57EC6F5B376DC8886F3311793A0AFE
   `InChIKey` 前 14 位）。`app\tools\check_reference_records.py` 会把它们与文献值
   逐条比对，跑一次就知道手上的 SD 是否可用。
 - 只跑了一次 20% 划分，不是 k 折；3.41 这个数本身带划分噪声。
-- 仓库里的 258 条 pytest 用例没有全部随包（便携 runtime 不带 pytest），
-  包内跑的是 36 条 stdlib unittest。
+- 完整开发测试（约 258 条）没有随此源码归档（便携 runtime 也不带 pytest）；
+  本归档只带 36 条 stdlib unittest。
 
 ---
 
