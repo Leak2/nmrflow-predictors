@@ -18,5 +18,19 @@
     "HRMS",
     "spectrum prediction",
     "RDKit"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Leak2/nmrflow-predictors",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/Leak2/nmrflow-predictors/releases/tag/v0.3.0",
+      "relation": "isVersionOf",
+      "resource_type": "software",
+      "scheme": "url"
+    }
   ]
 }

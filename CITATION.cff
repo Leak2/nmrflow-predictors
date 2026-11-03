@@ -8,6 +8,12 @@ authors:
 version: "0.3.0"
 date-released: "2026-11-03"
 license: "BSD-3-Clause"
+doi: "10.5281/zenodo.23923955"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23923955"
+repository-code: "https://github.com/Leak2/nmrflow-predictors"
+url: "https://github.com/Leak2/nmrflow-predictors/releases/tag/v0.3.0"
 abstract: >-
   nmrflow predicts 1H/13C (and optional 19F/31P) NMR spectra, literature-style
   reported values, and HRMS m/z from a SMILES string. Outputs are predictions,

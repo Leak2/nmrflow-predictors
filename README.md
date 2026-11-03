@@ -975,11 +975,16 @@ nmrshiftdb2 Database License（附许可证/URI、相同许可共享衍生库、
 不要删。没用索引时不会挂这行。
 
 **Q：怎么引用？**  
-见 [CITATION.cff](CITATION.cff)。Zenodo DOI 在首次归档后补进 `CITATION.cff` 与本 README；
-`.zenodo.json` 已准备好元数据。
+见 [CITATION.cff](CITATION.cff)。版本 DOI：`10.5281/zenodo.23923955`；
+概念 DOI：`10.5281/zenodo.23923954`。
 
 ## 10. 引用
 
-如果 nmrflow 对你有帮助，引用本仓库的 `CITATION.cff` 对应版本（当前 `0.3.0`）。  
-首次 Zenodo 归档后，把 DOI 填进 `CITATION.cff` 的 `doi` 字段和本 README 的 `CITATION` 段；
-在那之前请引用版本号与仓库地址，不要编造 DOI。
+如果 nmrflow 对你有帮助，请引用本仓库的 `CITATION.cff` 对应版本（当前 `0.3.0`）。
+
+**版本 DOI（0.3.0）**：<https://doi.org/10.5281/zenodo.23923955>  
+**概念 DOI（所有版本）**：<https://doi.org/10.5281/zenodo.23923954>
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23923955.svg)](https://doi.org/10.5281/zenodo.23923955)
+
+引用当前版本用版本 DOI；引用整个项目/所有版本用概念 DOI。
