@@ -91,10 +91,10 @@ class OutputTests(unittest.TestCase):
     def test_citation_cff_and_zenodo(self):
         root = Path(__file__).resolve().parents[1]
         cff = (root / "CITATION.cff").read_text(encoding="utf-8")
-        self.assertIn('version: "0.3.0"', cff)
+        self.assertIn('version: "0.3.1"', cff)
         self.assertIn("BSD-3-Clause", cff)
         zen = json.loads((root / ".zenodo.json").read_text(encoding="utf-8"))
-        self.assertEqual(zen["version"], "0.3.0")
+        self.assertEqual(zen["version"], "0.3.1")
         self.assertEqual(zen["license"], "BSD-3-Clause")
 
     def test_example_predicted_image(self):
@@ -102,7 +102,7 @@ class OutputTests(unittest.TestCase):
         path = root / "assets" / "example-predicted-13c.png"
         self.assertTrue(path.is_file())
         with Image.open(path) as image:
-            self.assertIn("nmrflow 0.3.0", image.info.get("Software", ""))
+            self.assertIn("nmrflow 0.3.1", image.info.get("Software", ""))
             self.assertIn("Predicted", image.info.get("Description", ""))
 
     def test_readme_license_faq(self):
