@@ -1,8 +1,11 @@
-﻿name: ci
+name: ci
 
 on:
   push:
   pull_request:
+
+env:
+  PYTHONUTF8: "1"
 
 jobs:
   test:
