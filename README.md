@@ -948,15 +948,13 @@ nmrshiftdb2 Database License（附许可证/URI、相同许可共享衍生库、
 不要删。没用索引时不会挂这行。
 
 **Q：怎么引用？**  
-见 [CITATION.cff](CITATION.cff)。0.3.4 的 version DOI 尚未创建；引用使用概念 DOI：`10.5281/zenodo.23923954`。
+见 [CITATION.cff](CITATION.cff)。版本 DOI：`10.5281/zenodo.24199403`；概念 DOI：`10.5281/zenodo.23923954`。
 
 ## 10. 引用
 
 如果 nmrflow 对你有帮助，请引用本仓库的 `CITATION.cff` 对应版本（当前 `0.3.4`）。
 
-  
+**版本 DOI（0.3.4）**：<https://doi.org/10.5281/zenodo.24199403>  
 **概念 DOI（所有版本）**：<https://doi.org/10.5281/zenodo.23923954>
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23923954.svg)](https://doi.org/10.5281/zenodo.23923954)
-
-0.3.4 的 version DOI 尚未创建；当前引用使用概念 DOI。0.3.3 的 version DOI `10.5281/zenodo.24194420` 仅对应 0.3.3。
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24199403.svg)](https://doi.org/10.5281/zenodo.24199403)
