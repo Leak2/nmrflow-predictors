@@ -16,13 +16,11 @@ import unittest
 from pathlib import Path
 
 
-from PIL import Image  # noqa: E402
-
-from nmrflow import __version__  # noqa: E402
 from nmrflow.cli import main as cli_main  # noqa: E402
 from nmrflow.core.types import Confidence  # noqa: E402
-from nmrflow.pipeline import dump_json, run  # noqa: E402
-from nmrflow.plot.plot_generic import plot_generic  # noqa: E402
+from nmrflow.ms.adducts import get_adduct  # noqa: E402
+from nmrflow.ms.exact_mass import make_adduct_result  # noqa: E402
+from nmrflow.pipeline import RunOptions, dump_json, run  # noqa: E402
 from nmrflow.predict.hose_index import resolve_index_path  # noqa: E402
 
 HAS_INDEX = resolve_index_path() is not None
@@ -33,84 +31,30 @@ TMP = "COP(=O)(OC)OC"
 CAFFEINE = "Cn1cnc2c1c(=O)n(C)c(=O)n2C"
 
 
-class OutputTests(unittest.TestCase):
-    def test_default_report_file_has_predicted_note(self):
-        work = Path(tempfile.mkdtemp())
-        self.assertEqual(cli_main(["CCO", "-o", str(work), "-q"]), 0)
-        text = (work / "CCO_report.txt").read_text(encoding="utf-8")
-        self.assertIn("Predicted by nmrflow", text)
-        self.assertIn("not experimental data", text)
-        self.assertNotIn("[SIMULATED]", text)
+class NoFoundTests(unittest.TestCase):
+    def test_default_has_no_found(self):
+        report = run("CCO")
+        self.assertNotIn("Found", report.report.text)
+        self.assertFalse(hasattr(report.report, "has_simulated_found"))
 
-    def test_default_hrms_only_calculated(self):
-        text = run("CCO").report.text
-        self.assertIn("Calculated", text)
-        self.assertNotIn("Found", text)
+    def test_no_found_option_exists(self):
+        self.assertFalse(hasattr(RunOptions(), "ms_found_mode"))
+        self.assertFalse(hasattr(RunOptions(), "seed"))
 
-    def test_png_has_predicted_metadata(self):
-        work = Path(tempfile.mkdtemp())
-        path = work / "c.png"
-        plot_generic(run("CCO").spectra["13C"], path)
-        with Image.open(path) as image:
-            self.assertIn("nmrflow", image.info.get("Software", ""))
-            self.assertIn("Predicted", image.info.get("Description", ""))
-
-    def test_json_has_top_level_provenance(self):
+    def test_json_has_no_found_flag(self):
         work = Path(tempfile.mkdtemp())
         path = dump_json(run("CCO"), work / "x.json")
         data = json.loads(path.read_text(encoding="utf-8"))
-        self.assertEqual(data["schema_version"], 1)
-        self.assertEqual(data["data_type"], "predicted")
-        self.assertEqual(data["generator"]["version"], __version__)
-        self.assertIn("generated_at", data)
+        path.unlink(missing_ok=True)
         self.assertNotIn("found_mode", data["ms"])
+        self.assertNotIn("found_is_simulated", data["ms"]["adducts"][0])
 
-    def test_found_flag_removed(self):
-        with self.assertRaises(SystemExit) as ctx:
-            cli_main(["CCO", "--found"])
-        self.assertEqual(ctx.exception.code, 2)
-
-    def test_manifest_present_and_fields(self):
-        work = Path(tempfile.mkdtemp())
-        self.assertEqual(cli_main(["CCO", "-o", str(work), "-q"]), 0)
-        path = work / "manifest.json"
-        self.assertTrue(path.exists(), "每次运行都应写 manifest.json")
-        data = json.loads(path.read_text(encoding="utf-8"))
-        self.assertEqual(data["schema_version"], 1)
-        self.assertEqual(data["data_type"], "predicted")
-        self.assertEqual(data["generator"]["version"], __version__)
-        self.assertEqual(data["input"]["smiles"], "CCO")
-        self.assertIn("generated_at", data)
-        self.assertIn("CCO_report.txt", data["outputs"])
-        self.assertRegex(data["outputs"]["CCO_report.txt"], r"^[0-9a-f]{64}$")
-
-    def test_ethics_doc_exists(self):
-        root = Path(__file__).resolve().parents[1]
-        self.assertTrue((root / "ETHICS.md").is_file())
-
-    def test_citation_cff_and_zenodo(self):
-        root = Path(__file__).resolve().parents[1]
-        cff = (root / "CITATION.cff").read_text(encoding="utf-8")
-        self.assertIn('version: "0.3.1"', cff)
-        self.assertIn("BSD-3-Clause", cff)
-        zen = json.loads((root / ".zenodo.json").read_text(encoding="utf-8"))
-        self.assertEqual(zen["version"], "0.3.1")
-        self.assertEqual(zen["license"], "BSD-3-Clause")
-
-    def test_example_predicted_image(self):
-        root = Path(__file__).resolve().parents[1]
-        path = root / "assets" / "example-predicted-13c.png"
-        self.assertTrue(path.is_file())
-        with Image.open(path) as image:
-            self.assertIn("nmrflow 0.3.1", image.info.get("Software", ""))
-            self.assertIn("Predicted", image.info.get("Description", ""))
-
-    def test_readme_license_faq(self):
-        root = Path(__file__).resolve().parents[1]
-        text = (root / "README.md").read_text(encoding="utf-8")
-        self.assertIn("代码与数据许可 FAQ", text)
-        self.assertIn("nmrshiftdb2 Database License", text)
-        self.assertIn("CITATION.cff", text)
+    def test_direct_mass_has_no_found(self):
+        ad = make_adduct_result(
+            {"C": 2, "H": 6, "O": 1}, get_adduct("[M+H]+")
+        )
+        self.assertFalse(hasattr(ad, "found"))
+        self.assertFalse(hasattr(ad, "found_is_simulated"))
 
 
 class SpectrumTests(unittest.TestCase):

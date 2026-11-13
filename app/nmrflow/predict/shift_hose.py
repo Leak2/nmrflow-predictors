@@ -27,6 +27,7 @@ HOSE 恰好补这一块——它不依赖任何人为规则，只看"数据库�
 from __future__ import annotations
 
 from dataclasses import dataclass
+from functools import lru_cache
 
 from ..core.types import Confidence, Provenance, Signal
 from ..mol.equivalence import SpinGroup
@@ -290,6 +291,37 @@ def _curated(sig: Signal) -> bool:
     )
 
 
+@lru_cache(maxsize=None)
+def _pinned_keys(nucleus: str) -> frozenset[str]:
+    """表里标了 ``protect = true`` 的条目名。
+
+    这些条目的 SMARTS 把整个官能团写全了（例如 ¹⁹F 的卤代乙烷条目，把邻碳的卤素
+    也写进了模式），命中的是"这个基团"，不是"某个核碰巧在附近"。而 ¹⁹F 的 HOSE
+    在含卤乙烷上最多只有 2 层球、σ≈8 ppm——那种均值把 CF2Cl / CF2I / CF2Br 混在
+    一起，拿它覆盖一个已由文献钉死的值只会更差。所以浅层命中直接跳过。
+
+    只对表里显式标注的条目生效，不改变 ``HoseConfig.protect_curated`` 的全局语义。
+    """
+    from ..data.loader import shift_table
+
+    try:
+        table = shift_table(nucleus)
+    except Exception:  # 表缺失/损坏时按"没有钉死项"处理，不影响主流程
+        return frozenset()
+    return frozenset(
+        e["name"] for e in table.get("env", []) if e.get("protect")
+    )
+
+
+def _pinned(sig: Signal) -> bool:
+    """Tier A 的这条值是否来自 ``protect = true`` 的条目。"""
+    return (
+        sig.provenance.tier == "A"
+        and not sig.provenance.fallback
+        and sig.provenance.key in _pinned_keys(sig.nucleus)
+    )
+
+
 def _level_of(sig: Signal) -> int:
     """从 ``provenance.key``（形如 ``"4球/12"``）取出命中球层。"""
     key = sig.provenance.key
@@ -354,7 +386,7 @@ def overlay_tier_b(
             stats.skipped_level += 1
             continue
 
-        if cfg.protect_curated and _curated(sig) and level < 4:
+        if (cfg.protect_curated and _curated(sig) or _pinned(sig)) and level < 4:
             stats.skipped_curated += 1
             continue
 

@@ -121,6 +121,83 @@ value = -113.0
 width = 15.0
 confidence = "medium"
 
+# ------------------------------------------- 卤代乙烷（XCF2-CFY，1,2-二卤）------
+# 这一族 δ 不是"F 所在的那个碳"单独决定的，两个碳的卤素组合一起决定：
+#   CF2Cl 旁边是 CFClI → −63.4；旁边是 CFCl2 → −68.1（差 4.7 ppm）
+# 所以下面几条 SMARTS 把**邻碳的卤素**一并写进模式，只覆盖两个碳的卤素都确定的情形，
+# 不做泛化。19F 的 HOSE 索引在这些环境上最多只有 2 层球，且 σ≈7.7–8.9（2 层球分不出
+# CF2Cl / CF2I / CF2Br，只能给一个混合均值），因此这几条标了 protect = true：
+# 浅层命中不得覆盖它们，见 shift_hose.overlay_tier_b。
+#
+# 取值来源两条独立路径，互为校验：
+#   ① JFC 1995, 74, 261–267（正文 p.262、实验 p.266）
+#   ② 2026-11-12 实测，376 MHz，CDCl3
+# 两路差值均 < 0.5 ppm。
+#
+# 未采信的一项：文献给 ICF2CFClI 的 CF2I 为 −120.0，偏离常见 CF2I 区间
+# （−50 ~ −62），文献卡片自己也标了"建议自行复测"，故不写入表。
+
+[[env]]
+name = "CF2Cl-CFClI (CF2Cl 端, 1,2-二氯-1-碘三氟乙烷)"
+smarts = "[FX1][CX4](F)(Cl)[CX4](F)(Cl)I"
+value = -63.4
+width = 3.0
+confidence = "high"
+protect = true
+
+[[env]]
+name = "CF2Cl-CFClI (CFClI 端, 同上)"
+smarts = "[FX1][CX4](Cl)(I)[CX4](F)(F)Cl"
+value = -71.9
+width = 3.0
+confidence = "high"
+protect = true
+
+[[env]]
+name = "CF2I-CFCl2 (CF2I 端, 1,2-二氯-1-碘三氟乙烷异构体)"
+smarts = "[FX1][CX4](F)(I)[CX4](F)(Cl)Cl"
+value = -54.8
+width = 3.0
+confidence = "high"
+protect = true
+
+[[env]]
+name = "CF2I-CFCl2 (CFCl2 端, 同上)"
+smarts = "[FX1][CX4](Cl)(Cl)[CX4](F)(F)I"
+value = -67.3
+width = 3.0
+confidence = "high"
+protect = true
+
+# X = Cl 的副产物 ClCF2CFCl2（文献单一路来源，只给 medium，仍 protect：
+# 它的两个值同样落在 2 层球会把 CF2Cl 拉偏的区间里）。
+[[env]]
+name = "CF2Cl-CFCl2 (CF2Cl 端, 1,1,2-三氯三氟乙烷)"
+smarts = "[FX1][CX4](F)(Cl)[CX4](F)(Cl)Cl"
+value = -68.1
+width = 4.0
+confidence = "medium"
+protect = true
+
+[[env]]
+name = "CF2Cl-CFCl2 (CFCl2 端, 同上)"
+smarts = "[FX1][CX4](Cl)(Cl)[CX4](F)(F)Cl"
+value = -72.4
+width = 4.0
+confidence = "medium"
+protect = true
+
+# 单氟、连两个卤素、另一个邻居是碳：CFCl2 / CFClI / CBrClF 这一类的通用项。
+# 没有它，这类碳（只有一个 F，不满足任何 CF2/CF3/CHF 模式）会掉进 −120 兜底，
+# CFClI 实测 −71.9，差 48 ppm。值取这一族的中心，宽度给足；不标 protect，
+# 因为具体环境一旦被 HOSE 用 3 层球命中，那比这个通用值更可信。
+[[env]]
+name = "R-CF(X)2 (单氟二卤代 sp3 碳)"
+smarts = "[FX1][CX4;H0;!$(C(F)(F))]([Cl,Br,I])[#6]"
+value = -72.0
+width = 12.0
+confidence = "low"
+
 # --------------------------------------------------------------- CF2 ------
 # 全氟链的 α / 内部 / 末端差别很大，必须分开给值。
 # !$(C(F)(F)F) 把 CF3 排除掉，否则 CF3 的 F 也会落进 CF2 条目。

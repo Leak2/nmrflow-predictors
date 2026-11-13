@@ -42,6 +42,23 @@ def has_stereochemistry(mol: Chem.Mol) -> bool:
     return False
 
 
+def potential_stereocenters(mol: Chem.Mol) -> set[int]:
+    """可能的手性中心，**包含未指定构型的**。
+
+    ``has_stereochemistry`` 只认已经画出来的 ``@``；但 CF₂Cl–CFClI 这类分子，
+    样品里那个碳就是手性中心，只是 SMILES 里没写 @。判断"CF₂ 上两个 F 是不是
+    非对映异位"必须用这一版，否则未标注的谱子会被当成两个 F 等价。
+    """
+    centers: set[int] = set()
+    try:
+        for info in Chem.FindPotentialStereo(mol, cleanIt=False, flagPossible=True):
+            if info.type == Chem.StereoType.Atom_Tetrahedral:
+                centers.add(info.centeredOn)
+    except Exception:  # 老版本 RDKit 没有该 API：当作无手性中心，退回旧行为
+        return centers
+    return centers
+
+
 def _hydrogens_of(mol: Chem.Mol, heavy_idx: int) -> list[int]:
     atom = mol.GetAtomWithIdx(heavy_idx)
     return [n.GetIdx() for n in atom.GetNeighbors() if n.GetAtomicNum() == 1]

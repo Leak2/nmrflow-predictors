@@ -18,7 +18,9 @@ from .core.constants import MAX_EXACT_SPINS, NUCLEUS_ORDER, POINTS_PER_PPM
 from .core.solvent import get_solvent
 from .core.types import FullReport, MsResult, NmrBlock, Spectrum1D
 from .core.units import freq_of, round_freq
-from .mol.equivalence import carbon_groups, hetero_groups, hydrogen_groups
+from .mol.equivalence import (
+    carbon_groups, hetero_groups, hydrogen_groups, potential_stereocenters,
+)
 from .mol.prepare import prepare
 from .mol.labile import find_labile
 from .ms.formula import formula_from_mol
@@ -169,6 +171,8 @@ def run(smiles: str, options: RunOptions | None = None) -> RunResult:
             sigs, freq, max_spins=opt.max_exact_spins
         )
         block_warnings.extend(f"{nucleus}: {w}" for w in spin_warnings)
+        if nucleus == "19F":
+            block_warnings.extend(_diastereotopic_f_warnings(prep, sigs))
         trans = all_transitions(blk, sigs, freq)
         spec = digitize(
             trans, sigs, nucleus, freq, solvent.display,
@@ -326,6 +330,41 @@ def _degenerate_shift_warnings(nucleus, signals) -> list[str]:
             f"查表按环境类型给值，同类型环境共用一个位移，谱图上会叠成一个峰；"
             f"真实谱中它们通常是一组靠得很近的多重峰"
         )
+    return out
+
+
+def _diastereotopic_f_warnings(prep, signals) -> list[str]:
+    """CF₂ 紧邻手性中心时，两个 F 非对映异位——真实谱是 AB，不是 2F 单峰。
+
+    本项目的 HOSE 实现没有立体化学扩展（见 ``predict/hose.py`` 的"已知偏离"第 2 条），
+    等价类按拓扑对称合并，所以这两个 F 会被合成一条 2F 线。位移本身（中心）是对的，
+    但多重度会少掉一个 AB 分裂——实测 CF₂Cl–CFClI 是 −61.82 / −64.76（Δδ 2.94 ppm，
+    ²J = 165 Hz）。与其编一个 Δδ 硬拆，不如把这件事写在提示里。
+    """
+    centers = potential_stereocenters(prep.mol)
+    if not centers:
+        return []
+    out: list[str] = []
+    for sig in signals:
+        if sig.n_nuclei < 2:
+            continue
+        carbons = set()
+        for idx in sig.atom_indices:
+            atom = prep.mol.GetAtomWithIdx(idx)
+            if atom.GetAtomicNum() != 9:
+                continue
+            for nb in atom.GetNeighbors():
+                if nb.GetAtomicNum() == 6:
+                    carbons.add(nb.GetIdx())
+        for c in carbons:
+            atom_c = prep.mol.GetAtomWithIdx(c)
+            if any(nb.GetIdx() in centers for nb in atom_c.GetNeighbors()):
+                out.append(
+                    f"δ {sig.shift:.2f} 的 {sig.n_nuclei} 个 F 同处一个碳，该碳紧邻手性中心"
+                    f" → 两个 F 非对映异位，真实谱应为 AB 分裂（同类环境实测 Δδ≈2.9 ppm、"
+                    f"²J≈165 Hz；本模型无立体化学扩展，按单峰输出）"
+                )
+                break
     return out
 
 
