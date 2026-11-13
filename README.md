@@ -1,5 +1,7 @@
 # nmrflow
 
+[English](README-EN.md) | 中文
+
 输入一个 **SMILES**，输出 **NMR 谱图 PNG + 文献风格报道值 + HRMS 预测**。
 
 - **必出**：¹H NMR、¹³C NMR
