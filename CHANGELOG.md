@@ -26,7 +26,7 @@ SO2F 另列：SO2F2 33.0（protect）、FSO3F 的 S-F 35.0 / O-F 235.0、
 FSO3H 41.7、R-O-SO2F 47.0。拆分后 19F 钉死值 64 个 / 3 个浅层覆盖 /
 MAE 6.38 → 3.32（3 个全部变好，0 个变差）。测试：**283 passed**。
 
-Zenodo 版本 DOI：`10.5281/zenodo.24199403`（reserved，发布后生效）；
+Zenodo 版本 DOI：`10.5281/zenodo.24199403`（published）；
 概念 DOI：`10.5281/zenodo.23923954`。
 
 
