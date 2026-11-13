@@ -7,13 +7,15 @@ HOSE 球形环境位移索引，由 tools/build_hose_index.py 生成。
 数据来源
 --------
 NMRShiftDB2（https://nmrshiftdb.nmr.uni-koeln.de/），数据文件
-nmrshiftdb2withsignals.sd（151 MB），通过 SourceForge 的 nmrshiftdb2/data 目录
+nmrshiftdb2withsignals.sd（158,569,118 B / 158.6 MB / 151.2 MiB），通过 SourceForge 的 nmrshiftdb2/data 目录
 公开下载，无需注册或认证。
 
 索引内容
 --------
 每个 (核素, HOSE 码) 一行，只保存聚合统计量 (n, Σδ, Σδ²)，
 不包含任何原始化合物流或谱图数据。分子结构与位移的对应关系无法从索引还原。
+当前 SD 为 58,187 条原始记录，其中 56,786 条带实验谱信号；197 条计算谱、158 条解析失败、
+663 条 sanitize 失败被排除。
 
 许可
 ----

@@ -467,8 +467,8 @@ Tier B 用 NMRShiftDB2 的实测谱建 HOSE 码索引，查"数据库里同环�
 
 | 项目 | 数值 |
 |---|---|
-| 数据源 | `nmrshiftdb2withsignals.sd`（151 MB，SourceForge `nmrshiftdb2/data`，无需注册） |
-| 实验谱记录 | 53,906 条（另有 197 条计算谱被剔除） |
+| 数据源 | `nmrshiftdb2withsignals.sd`（158,569,118 B / 158.6 MB / 151.2 MiB，SourceForge `nmrshiftdb2/data`，无需注册） |
+| 记录口径 | **58,187 条原始记录**；剔除 197 条计算谱、158 条解析失败、663 条 sanitize 失败后，**56,786 条带实验谱信号** |
 | 索引 | 328,991 行 / 31.0 MB（gzip 7.2 MB） |
 | 每个原子只存最深一层（4 层球）的码，查询时截断做前缀范围扫描 | 行数省近 4 倍 |
 
@@ -511,7 +511,7 @@ python tools/build_hose_index.py --sd /path/to/nmrshiftdb2withsignals.sd \
 > （留出 20% 之后的 80%，共 27 MB）随便携包发布，位于 `app/tools/` 与 `app/build/`。
 > 先跑 `python app/tools/check_eval_kit.py` 九项自检（哈希 / 核种隔离 /
 > 训练索引的键全部来自全量索引），再照 `app/tools/README.md` 的命令跑评估。
-> 需要你自己下载 NMRShiftDB2 的 `nmrshiftdb2withsignals.sd`（151 MB，免费）。
+> 需要你自己下载 NMRShiftDB2 的 `nmrshiftdb2withsignals.sd`（158.6 MB / 151.2 MiB，免费）。
 > 评估必须用训练索引：用随包的全量索引就是拿答案考自己。
 > 仍然没做到的：那份 SD 文件当初没留 sha256，无法确认复算者下到同一版。
 

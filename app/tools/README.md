@@ -36,7 +36,7 @@
 
 ## 2. 需要你自己准备的一样东西：原始谱库
 
-评估的输入是 NMRShiftDB2 的 `nmrshiftdb2withsignals.sd`（151 MB，约 5 万条实验谱）。
+评估的输入是 NMRShiftDB2 的 `nmrshiftdb2withsignals.sd`（158,569,118 B / 158.6 MB；58,187 条原始记录，56,786 条带实验谱信号）。
 
 **它不随包**，原因有两条：
 
@@ -50,7 +50,7 @@
 
 ```text
 bytes    158,569,118
-records  58,187
+records  58,187 raw / 56,786 with signals
 sha256   0E86688360E23C88CCF0EB82A1251315FA57EC6F5B376DC8886F3311793A0AFE
 ```
 
@@ -83,7 +83,7 @@ sha256（与 `app/build/EVAL_KIT_SHA256.txt` 同一份记录）：
 ```
 
 这两份就是生成 README 数字时用的那两份，逐字节相同。所以你**不需要**重建索引
-（从 151 MB 的 SD 建一次约 6 分钟），直接拿它们评估即可。
+（从 158.6 MB 的 SD 建一次约 6 分钟），直接拿它们评估即可。
 
 ### 留出法怎么划的
 

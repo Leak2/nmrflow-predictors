@@ -99,7 +99,7 @@ GUI 的批量模式 / 结构预览 / ZIP 下载在开发仓库的 `tests/test_ap
 
 ```text
 bytes    158,569,118
-records  58,187
+records  58,187 raw / 56,786 with signals
 sha256   0E86688360E23C88CCF0EB82A1251315FA57EC6F5B376DC8886F3311793A0AFE
 ```
 

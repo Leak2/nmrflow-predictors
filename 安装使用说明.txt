@@ -145,6 +145,6 @@ README 里的误差数字（1H 0.39 / 13C 3.41 / 19F 8.76 / 31P 19.71）不是�
     runtime\python\python.exe app\tools\check_eval_kit.py
 
 九项全 PASS 之后，按 app\tools\README.md 里的命令跑评估。你还需要自己下载
-NMRShiftDB2 的 nmrshiftdb2withsignals.sd（151 MB，SourceForge 免费，
+NMRShiftDB2 的 nmrshiftdb2withsignals.sd（158,569,118 B / 158.6 MB，SourceForge 免费，
 不需要注册）——它不随包，原因写在那个文件里。评估用的是随包的"训练索引"
 （80% 化合物），不是程序运行时那份全量索引，否则等于拿答案考自己。
