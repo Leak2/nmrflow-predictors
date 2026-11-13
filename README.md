@@ -21,9 +21,9 @@ nmrflow 输出的是**预测**，不是实验数据；默认只给 `Calculated`�
 
 ---
 
-## 0. 版本与行为变更（0.2.2 → 0.3.2）
+## 0. 版本与行为变更（0.2.2 → 0.3.3）
 
-当前源码版本 **0.3.2**。0.2.2–0.2.4 最初只做在便携包里（外部评审后的修复），0.2.5 把它们**回灌进源码仓库**，
+当前源码版本 **0.3.3**。0.2.2–0.2.4 最初只做在便携包里（外部评审后的修复），0.2.5 把它们**回灌进源码仓库**，
 并修掉回灌带进来的一个回归；0.2.6 撤掉小双环特例，0.2.7 让评估套件随包、exe 带上版本资源，
 0.2.8 吸收了外部交付里的界面/脚本改进（自动停止、卸载向导、自检），但**驳回了**其中
 「恢复小双环守卫」的改动（依据是错的，见 §8.5）；0.2.9 修掉 0.2.8 交付物里的两个坑
@@ -51,7 +51,7 @@ nmrflow 输出的是**预测**，不是实验数据；默认只给 `Calculated`�
 的四条线砍成两条（强度又被重新归一化，总积分看着正常）。现在改为每个自旋自己的 `Σ|J|`，
 并把强度归一化移到所有过滤之后。`tests/test_spin.py` 有 AX 与 AB 两条回归钉住。
 
-测试：仓库 `pytest tests/` 共 **265 条**（16 个模块，含 `test_app.py`）；便携包内
+测试：仓库 `pytest tests/` 共 **278 条**（16 个模块，含 `test_app.py`）；便携包内
 `tests/run_tests.py` 是 **36 条**交付级 stdlib unittest。详见 §7。
 
 ## 1. 安装
@@ -173,7 +173,7 @@ python tools/make_release.py      # 组装 + 冻结 exe + 打 zip
 产物在 `dist/`：
 
 ```
-nmrflow-0.3.2-portable/
+nmrflow-0.3.3-portable/
 ├─ NMR-Predictor.exe      双击启动（无控制台窗口）
 ├─ 启动 NMR.bat           命令行版，排错时能看到 Streamlit 原始输出
 ├─ 安装.bat / 卸载.bat    桌面快捷方式的增删
@@ -811,7 +811,7 @@ confidence = "medium"
 
 ## 7. 测试
 
-仓库全量测试（16 个模块，**265 条**）：
+仓库全量测试（16 个模块，**278 条**）：
 
 ```bash
 python -m pytest tests/ -q
@@ -947,16 +947,16 @@ nmrshiftdb2 Database License（附许可证/URI、相同许可共享衍生库、
 不要删。没用索引时不会挂这行。
 
 **Q：怎么引用？**  
-见 [CITATION.cff](CITATION.cff)。版本 DOI：`10.5281/zenodo.24192947`；
+见 [CITATION.cff](CITATION.cff)。版本 DOI：`10.5281/zenodo.24194420`；
 概念 DOI：`10.5281/zenodo.23923954`。
 
 ## 10. 引用
 
-如果 nmrflow 对你有帮助，请引用本仓库的 `CITATION.cff` 对应版本（当前 `0.3.2`）。
+如果 nmrflow 对你有帮助，请引用本仓库的 `CITATION.cff` 对应版本（当前 `0.3.3`）。
 
-**版本 DOI（0.3.2）**：<https://doi.org/10.5281/zenodo.24192947>  
+**版本 DOI（0.3.3）**：<https://doi.org/10.5281/zenodo.24194420>  
 **概念 DOI（所有版本）**：<https://doi.org/10.5281/zenodo.23923954>
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24192947.svg)](https://doi.org/10.5281/zenodo.24192947)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24194420.svg)](https://doi.org/10.5281/zenodo.24194420)
 
 引用当前版本用版本 DOI；引用整个项目/所有版本用概念 DOI。

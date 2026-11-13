@@ -78,6 +78,19 @@ def test_hrms_line():
     assert "Found" not in text
 
 
+def test_spin_limit_warning_reaches_report():
+    result = run("CCO", _opt(max_exact_spins=1, proton_mhz=10))
+    assert any("自旋数" in w and "上限" in w for w in result.report.warnings)
+
+
+def test_ei_uses_radical_cation_notation():
+    from nmrflow.ms.adducts import adducts_for_method
+
+    assert adducts_for_method("EI")[0].name == "M⁺·"
+    result = run("CCO", _opt(ms_method="EI"))
+    assert "M⁺·" in result.report.text
+
+
 def test_hrms_default_has_no_found():
     """默认只给 Calculated。
 

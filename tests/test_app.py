@@ -170,6 +170,19 @@ def test_batch_results_survive_rerun():
     assert at.get("download_button"), "批量 ZIP 下载按钮 rerun 后丢了"
 
 
+def test_zip_payload_contains_reports_and_images(tmp_path):
+    from nmrflow.app import _zip_dir
+
+    (tmp_path / "report.txt").write_text("calculated only", encoding="utf-8")
+    (tmp_path / "spectrum.png").write_bytes(b"png")
+    data = _zip_dir(tmp_path)
+    import io
+    import zipfile
+
+    with zipfile.ZipFile(io.BytesIO(data)) as zf:
+        assert sorted(zf.namelist()) == ["report.txt", "spectrum.png"]
+
+
 def test_simulated_found_is_not_exposed_in_ui():
     """「模拟 Found」只留命令行入口，界面上不能有这个开关。
 

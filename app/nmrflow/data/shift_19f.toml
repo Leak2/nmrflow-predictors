@@ -41,6 +41,9 @@ smarts = "[FX1][CX4](F)(F)[SX4](=O)(=O)"
 value = -78.0
 width = 4.0
 confidence = "high"
+# 2 层球 HOSE 在 CF3-SO2- 上会拉到 -58 左右（σ 也不小）；表值 -78 是
+# 文献/训练集锚定值，不能被浅层命中覆盖。
+protect = true
 
 [[env]]
 name = "CF3-C(=O) (三氟甲基酮)"

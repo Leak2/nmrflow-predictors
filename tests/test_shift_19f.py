@@ -211,3 +211,11 @@ def test_diastereotopic_cf2_raises_warning():
     assert "非对映异位" in warn_i and "AB" in warn_i
     warn_ii = " ".join(run("ClC(Cl)(F)C(F)(I)F").report.warnings)
     assert "非对映异位" not in warn_ii
+
+def test_cf3_so2f_is_not_overridden_by_shallow_hose():
+    """CF3-SO2- 表值 -78 不能被 2 层球 HOSE 拉到 -58。"""
+    sigs = run("FC(F)(F)S(=O)(=O)F").signals["19F"]
+    cf3 = [s for s in sigs if s.n_nuclei == 3]
+    assert len(cf3) == 1
+    assert abs(cf3[0].shift + 78.0) <= 1.0
+    assert cf3[0].provenance.tier == "A"

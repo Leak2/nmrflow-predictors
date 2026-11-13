@@ -28,9 +28,9 @@
 
 ## 4. 输出里已经带的标记
 
-- `report.txt` 末尾：`Predicted by nmrflow 0.3.2 - not experimental data.`
+- `report.txt` 末尾：`Predicted by nmrflow 0.3.3 - not experimental data.`
 - PNG 右下角：`PREDICTED - not experimental`
-- PNG metadata：`Software=nmrflow 0.3.2`、`Description=Predicted NMR spectrum - not experimental data`
+- PNG metadata：`Software=nmrflow 0.3.3`、`Description=Predicted NMR spectrum - not experimental data`
 - JSON 顶层：`data_type: "predicted"`、`generator.version`、`generated_at`
 - `manifest.json`：输入、选项、输出 SHA256、`data_type`
 

@@ -348,6 +348,23 @@ class ReferenceRecordTests(unittest.TestCase):
         self.assertEqual(proc.returncode, 0, proc.stdout[-500:])
 
 
+class CliBatchTests(unittest.TestCase):
+    def test_partial_failure_returns_nonzero(self):
+        """3 valid + 1 invalid -> exit 1, with [汇总] on stderr."""
+        import contextlib
+        import io
+
+        work = Path(tempfile.mkdtemp())
+        inp = work / "batch.txt"
+        inp.write_text("CCO\nnot-a-smiles\nCCN\nc1ccccc1\n", encoding="utf-8")
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            code = cli_main(["-f", str(inp), "-o", str(work / "out")])
+        self.assertEqual(code, 1)
+        self.assertIn("[汇总]", err.getvalue())
+        self.assertTrue(any((work / "out").glob("*.png")))
+
+
 class BatFileTests(unittest.TestCase):
     """bat 的字节级约束——这类问题在 Python 里完全看不出来。
 
