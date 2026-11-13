@@ -60,6 +60,7 @@ KIT_FILES = [
     "tools/diag_sp3.py",
     "tools/diag_bicyclic.py",
     "tools/diag_hetero.py",
+    "tools/diag_curated_override.py",
     "tools/mine_hetero.py",
     "tools/ml_baseline_19f.py",
     "tools/bench_spin.py",

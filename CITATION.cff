@@ -5,15 +5,15 @@ type: software
 authors:
   - family-names: "Yu"
     given-names: "Jiang Keal"
-version: "0.3.3"
+version: "0.3.4"
 date-released: "2026-11-13"
 license: "BSD-3-Clause"
-doi: "10.5281/zenodo.24194420"
+doi: "10.5281/zenodo.23923954"
 identifiers:
   - type: doi
-    value: "10.5281/zenodo.24194420"
+    value: "10.5281/zenodo.23923954"
 repository-code: "https://github.com/Leak2/nmrflow-predictors"
-url: "https://github.com/Leak2/nmrflow-predictors/releases/tag/v0.3.3"
+url: "https://github.com/Leak2/nmrflow-predictors/releases/tag/v0.3.4"
 abstract: >-
   nmrflow predicts 1H/13C (and optional 19F/31P) NMR spectra, literature-style
   reported values, and HRMS m/z from a SMILES string. Outputs are predictions,

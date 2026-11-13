@@ -176,3 +176,18 @@ h   = blake2b(f"nmrflow-hose-v1:{key}", digest_size=8).digest()
 - `tests/` 里的 230 条 pytest 用例没有全部随包：便携 runtime 不带 pytest，
   包内只跑 `tests\run_tests.py`（stdlib unittest，20 条）。
   完整测试仍在源码仓库。
+
+### curated 覆盖诊断
+
+`diag_curated_override.py` 统计 Tier A 表项被 <4 球 HOSE 覆盖后，逐原子
+Tier A / 合并 / 实测的误差，输出 MAE 与最差案例：
+
+```bash
+python app/tools/diag_curated_override.py --sd /path/to/nmrshiftdb2withsignals.sd \
+  --nuclei 19F,31P --train-index app/build/hose_index_hetero.sqlite
+```
+
+当前仓库口径（2026-11-13）：19F 68 个钉死原子 / 7 个浅层覆盖，
+MAE 8.71 → 5.58；31P 214 / 205，10.42 → 6.14。0.2.9 分支另有一次
+8 / 5.11 的结果，差异来自 CF3-SO2 拆分。
+

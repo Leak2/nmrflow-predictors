@@ -173,6 +173,8 @@ def run(smiles: str, options: RunOptions | None = None) -> RunResult:
         block_warnings.extend(f"{nucleus}: {w}" for w in spin_warnings)
         if nucleus == "19F":
             block_warnings.extend(_diastereotopic_f_warnings(prep, sigs))
+        if nucleus == "1H":
+            block_warnings.extend(_diastereotopic_h_warnings(prep, sigs))
         trans = all_transitions(blk, sigs, freq)
         spec = digitize(
             trans, sigs, nucleus, freq, solvent.display,
@@ -365,6 +367,38 @@ def _diastereotopic_f_warnings(prep, signals) -> list[str]:
                     f"²J≈165 Hz；本模型无立体化学扩展，按单峰输出）"
                 )
                 break
+    return out
+
+
+def _diastereotopic_h_warnings(prep, signals) -> list[str]:
+    """CH2 紧邻潜在手性中心时，两个 H 可能非对映异位。
+
+    这里只做识别和提示：当前模型仍把 CH2 的两个 H 当作等价组，
+    不输出 AB 分裂，也不编造 Δδ。已知 3D SD 中只有 17 组双 H 实测，
+    不足以训练通用 AB；等有更多数据再改模型。
+    """
+    centers = potential_stereocenters(prep.mol)
+    if not centers:
+        return []
+    out: list[str] = []
+    seen: set[int] = set()
+    for sig in signals:
+        for c in sig.heavy_indices:
+            if c in seen:
+                continue
+            atom = prep.mol.GetAtomWithIdx(c)
+            if atom.GetAtomicNum() != 6:
+                continue
+            h_count = sum(1 for nb in atom.GetNeighbors() if nb.GetAtomicNum() == 1)
+            h_count += atom.GetNumImplicitHs()
+            if h_count != 2:
+                continue
+            if any(nb.GetIdx() in centers for nb in atom.GetNeighbors() if nb.GetAtomicNum() == 6):
+                seen.add(c)
+                out.append(
+                    f"δ {sig.shift:.2f} 附近的 CH2 紧邻潜在手性中心"
+                    f" → 两个 H 可能非对映异位；当前按等价/平均输出，未做 AB 分裂"
+                )
     return out
 
 

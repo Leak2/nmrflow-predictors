@@ -9,7 +9,7 @@
   "upload_type": "software",
   "access_right": "open",
   "license": "BSD-3-Clause",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "publication_date": "2026-11-13",
   "keywords": [
     "NMR",
@@ -27,7 +27,7 @@
       "scheme": "url"
     },
     {
-      "identifier": "https://github.com/Leak2/nmrflow-predictors/releases/tag/v0.3.3",
+      "identifier": "https://github.com/Leak2/nmrflow-predictors/releases/tag/v0.3.4",
       "relation": "isVersionOf",
       "resource_type": "software",
       "scheme": "url"

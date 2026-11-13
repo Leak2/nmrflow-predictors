@@ -36,14 +36,29 @@ width = 5.0
 confidence = "high"
 
 [[env]]
-name = "CF3-SO2- (三氟甲磺酰 / triflyl)"
-smarts = "[FX1][CX4](F)(F)[SX4](=O)(=O)"
+# S 上带 F 的 CF3SO2F：与三氟甲磺酸酯/磺酰胺分开，避免整类保护。
+name = "CF3-SO2F (三氟甲磺酰氟)"
+smarts = "[FX1][CX4](F)(F)[SX4](=O)(=O)F"
 value = -78.0
 width = 4.0
 confidence = "high"
-# 2 层球 HOSE 在 CF3-SO2- 上会拉到 -58 左右（σ 也不小）；表值 -78 是
-# 文献/训练集锚定值，不能被浅层命中覆盖。
 protect = true
+
+[[env]]
+# 三氟甲磺酸酯（triflate）：SD 记录 60008766 实测 -74.32；不能用 -78 覆盖。
+name = "CF3-SO2-O (三氟甲磺酸酯 / triflate)"
+smarts = "[FX1][CX4](F)(F)[SX4](=O)(=O)[OX2]"
+value = -74.3
+width = 4.0
+confidence = "high"
+protect = true
+
+[[env]]
+name = "CF3-SO2- (三氟甲磺酰 / triflyl)"
+smarts = "[FX1][CX4](F)(F)[SX4](=O)(=O)"
+value = -78.0
+width = 8.0
+confidence = "low"
 
 [[env]]
 name = "CF3-C(=O) (三氟甲基酮)"
@@ -308,6 +323,48 @@ value = -151.0
 width = 5.0
 confidence = "high"
 
+# S 上只有 F/O、没有 C 的 SO2F 子类。SD 里 11 条：
+#   SO2F2 33.0；FSO3F 35.0；FSO3H 41.74；R-O-SO2F 44.3~50.0（中位约 47）
+# 这些不匹配 R-SO2F（后者要求 S-C），必须单列。
+[[env]]
+name = "SO2F2 (硫酰氟)"
+smarts = "[FX1][SX4](=O)(=O)(F)"
+value = 33.0
+width = 4.0
+confidence = "high"
+protect = true
+
+[[env]]
+name = "FSO3F (氟磺酰氟, S-F)"
+smarts = "[FX1][SX4](=O)(=O)(O[F])"
+value = 35.0
+width = 4.0
+confidence = "high"
+
+[[env]]
+# 同一结构里的 O-F（hypofluorite）在 SD 60009940 中实测 +235.0；
+# 不能让它掉进 -120 兜底。
+name = "FSO3F (氟磺酰氟, O-F)"
+smarts = "[FX1][OX2][SX4](=O)(=O)"
+value = 235.0
+width = 5.0
+confidence = "high"
+protect = true
+
+[[env]]
+name = "FSO3H (氟磺酸)"
+smarts = "[FX1][SX4](=O)(=O)([OX2;H1])"
+value = 41.7
+width = 5.0
+confidence = "high"
+
+[[env]]
+name = "R-O-SO2F (氟磺酸酯)"
+smarts = "[FX1][SX4](=O)(=O)(O[CX4])"
+value = 47.0
+width = 8.0
+confidence = "medium"
+
 # ------------------------------------------------------- 磺酰氟 / 其他 ------
 # 注意顺序：SF5/SF3 的 [FX1][SX6,SX4] 也会匹配 SO2F，必须排在磺酰氟之后。
 
@@ -318,12 +375,38 @@ value = 66.0
 width = 8.0
 confidence = "medium"
 
+# SD 里 R-SO2F 的 26 条实测不是一根 46.00 能覆盖的：
+#   CH3-SO2F  61.6（CS(=O)(=O)F）
+#   CH-SO2F   63.7（60007692）
+#   CF2-SO2F  38.0~46.5，中位约 43
+# 因此按 α-碳拆三条；其余的 R-SO2F 继续用 low 兜底，让 HOSE 决定。
 [[env]]
-name = "R-SO2F (烷基磺酰氟)"
+name = "CH3-SO2F (甲磺酰氟)"
+smarts = "[FX1][SX4](=O)(=O)[CX4;H3]"
+value = 61.6
+width = 4.0
+confidence = "high"
+
+[[env]]
+name = "CH-SO2F (次甲基磺酰氟)"
+smarts = "[FX1][SX4](=O)(=O)[CX4;H1]"
+value = 63.7
+width = 6.0
+confidence = "medium"
+
+[[env]]
+name = "CF2-SO2F (二氟甲基磺酰氟)"
+smarts = "[FX1][SX4](=O)(=O)[CX4;!$(C(F)(F)F)](F)"
+value = 43.0
+width = 6.0
+confidence = "medium"
+
+[[env]]
+name = "R-SO2F (烷基磺酰氟, 其他)"
 smarts = "[FX1][SX4](=O)(=O)[#6]"
 value = 46.0
-width = 6.0
-confidence = "high"
+width = 8.0
+confidence = "low"
 
 [[env]]
 name = "SF5 / SF3"

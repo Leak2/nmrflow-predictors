@@ -412,3 +412,8 @@ def test_degenerate_shift_warning_mentions_the_shared_rule():
     assert any("同一化学位移" in w for w in result.spectra["19F"].warnings), \
         result.spectra["19F"].warnings
 
+
+def test_ch2_next_to_potential_stereocenter_warns():
+    """CH2 紧邻潜在手性中心：只提示非对映异位，不伪造 AB。"""
+    result = run("CCC(Cl)(F)C")
+    assert any("CH2" in w and "非对映异位" in w for w in result.report.warnings)

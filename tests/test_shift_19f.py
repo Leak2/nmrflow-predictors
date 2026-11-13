@@ -219,3 +219,43 @@ def test_cf3_so2f_is_not_overridden_by_shallow_hose():
     assert len(cf3) == 1
     assert abs(cf3[0].shift + 78.0) <= 1.0
     assert cf3[0].provenance.tier == "A"
+def test_triflate_is_not_forced_to_cf3so2f_table_value():
+    """CF3-SO2-O（triflate）不能套用 CF3-SO2F 的 -78；SD 实测 -74.32。"""
+    sigs = run("O=S(=O)(OCC(F)(F)C(F)F)C(F)(F)F").signals["19F"]
+    cf3 = [s for s in sigs if s.n_nuclei == 3]
+    assert len(cf3) == 1
+    assert abs(cf3[0].shift + 74.3) <= 1.0
+    assert cf3[0].provenance.tier == "A"
+    assert "CF3-SO2-O" in cf3[0].provenance.key
+def test_so2f_alkyl_subclasses():
+    """R-SO2F 不能再用 46.00 覆盖：CH3 / CH / CF2 分开。"""
+    cases = [
+        ("CS(=O)(=O)F", 61.6, "CH3-SO2F"),
+        ("O=C(F)C(F)(F)S(=O)(=O)F", 43.0, "CF2-SO2F"),
+        ("[H]C(C(=O)F)(C(F)(F)F)S(=O)(=O)F", 63.7, "CH-SO2F"),
+    ]
+    for smiles, want, key in cases:
+        sigs = run(smiles, RunOptions(tier_b=False)).signals["19F"]
+        hit = [s for s in sigs if s.provenance.key.startswith(key)]
+        assert len(hit) == 1, (smiles, [(s.shift, s.provenance.key) for s in sigs])
+        assert abs(hit[0].shift - want) <= 0.5, (smiles, hit[0].shift)
+def test_so2f_without_carbon_subclasses():
+    """S 上只有 F/O 的 SO2F 子类：SO2F2 / FSO3H / R-O-SO2F。"""
+    cases = [
+        ("O=S(=O)(F)F", 33.0, "SO2F2"),
+        ("[H]OS(=O)(=O)F", 41.7, "FSO3H"),
+        ("O=S(=O)(F)OC(F)(F)F", 47.0, "R-O-SO2F"),
+    ]
+    for smiles, want, key in cases:
+        sigs = run(smiles, RunOptions(tier_b=False)).signals["19F"]
+        hit = [s for s in sigs if s.provenance.key.startswith(key)]
+        assert len(hit) == 1, (smiles, [(s.shift, s.provenance.key) for s in sigs])
+        assert abs(hit[0].shift - want) <= 0.5, (smiles, hit[0].shift)
+def test_fso3f_has_two_fluorine_environments():
+    """CAS 13536-85-1 / FSO3F：SD 60009940 实测 S-F 35.0、O-F 235.0。"""
+    sigs = run("O=S(=O)(F)OF", RunOptions(tier_b=False)).signals["19F"]
+    assert len(sigs) == 2
+    sf = [s for s in sigs if s.provenance.key.startswith("FSO3F (氟磺酰氟, S-F)")]
+    of = [s for s in sigs if s.provenance.key.startswith("FSO3F (氟磺酰氟, O-F)")]
+    assert len(sf) == 1 and abs(sf[0].shift - 35.0) <= 0.5
+    assert len(of) == 1 and abs(of[0].shift - 235.0) <= 0.5

@@ -185,7 +185,7 @@ class EvalKitTests(unittest.TestCase):
 
     def test_eval_scripts_import_under_package_layout(self):
         """``--help`` 走到 argparse 就返回，所以这一步只验证 import 链。"""
-        for name in ("eval_tier_ab.py", "check_eval_kit.py"):
+        for name in ("eval_tier_ab.py", "check_eval_kit.py", "diag_curated_override.py"):
             proc = subprocess.run(
                 [sys.executable, str(TOOLS / name), "--help"],
                 capture_output=True, text=True, timeout=180,

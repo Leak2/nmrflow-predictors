@@ -47,7 +47,7 @@ import version_info as vinfo  # noqa: E402  (tools/ 内的兄弟模块)
 
 # 与 pyproject.toml 保持一致。0.2.0 起便携包含 HOSE 索引（Tier B 默认开启）；
 # 0.2.1 只更新了包内 README（FluoBase 对照、开发环境说明），代码与 0.2.0 相同。
-VERSION = "0.3.3"
+VERSION = "0.3.4"
 PKG_NAME = f"nmrflow-{VERSION}-portable"
 EXE_NAME = "NMR-Predictor.exe"
 PORT = 8901
