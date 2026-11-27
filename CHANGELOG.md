@@ -20,6 +20,15 @@
 - 表版本 0.5.0 → 0.5.1。README「已知局限」补一条：磺酸根 / 铵盐 / 烷氧负离子
   仍未建模，中性甲酸（实测 166）仍沿用 `carboxylic_acid` 的 178。
 - 顺带去掉 CHANGELOG 里重复的 0.3.4 段落（后补的 Zenodo DOI 版与旧版并存）。
+- **版本号新增跨文件一致性测试**（`tests/test_version_consistency.py`，6 条）：
+  pyproject.toml / CITATION.cff / .zenodo.json 三处此前没有任何守护。漏改的后果
+  比代码侧更重——Zenodo 的 DOI 记录**不可修改**，只能发新版本覆盖。
+- **`prepare(add_hs=False)` 会漏掉全部氢**：分子式只数原子槽位，而隐式 H 不占槽位，
+  乙醇会算成 C2O。现有调用都走默认 `add_hs=True`，所以一直没暴露。改为计数时补
+  `GetTotalNumHs()`；AddHs 之后该值为 0，两种模式用同一段代码不会重复计数。
+- **`.gitignore` 的 `build/` 与已跟踪的 `app/build/*.sqlite` 语义打架**：已跟踪文件
+  虽不受影响，但将来新建的索引会被静默忽略。改为精确忽略 `/app/build/runtime/`
+  与 `/app/build/pyinstaller/` 两个由 make_release 生成的目录。
 
 ## 0.3.4 (2026-11-13) — curated 覆盖诊断
 

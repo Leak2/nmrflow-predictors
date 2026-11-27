@@ -129,9 +129,16 @@ def prepare(smiles: str, *, add_hs: bool = True,
     if add_hs:
         with_h = Chem.AddHs(with_h)
 
-    formula = {}
+    # 隐式氢不占原子槽位：add_hs=False 时它们只存在于 GetTotalNumHs() 里。
+    # 不补这一段，分子式会少掉全部 H（乙醇会算成 C2O）。AddHs 之后重原子的
+    # GetTotalNumHs() 为 0，所以两种情形用同一段代码都不会重复计数。
+    formula: dict[str, int] = {}
     for atom in with_h.GetAtoms():
-        formula[atom.GetSymbol()] = formula.get(atom.GetSymbol(), 0) + 1
+        sym = atom.GetSymbol()
+        formula[sym] = formula.get(sym, 0) + 1
+        n_h = atom.GetTotalNumHs()
+        if n_h:
+            formula['H'] = formula.get('H', 0) + n_h
 
     # 各组分单独的元素计数与电荷：质谱对盐必须分别报阳离子/阴离子，
     # 把 C18H15S+ 和 C14H7F12O9S4- 相加成 C32H22F12O9S5 再算 [M+H]+ 没有化学意义。
