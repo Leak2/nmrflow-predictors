@@ -9,6 +9,9 @@ __pycache__/
 tests/.work/
 .DS_Store
 Thumbs.db
-build/
+# 打包中间产物。app/build/ 里的 HOSE 索引与 EVAL_KIT_SHA256.txt 是要跟踪的源文件，
+# 所以不能整体忽略 app/build/——只忽略这两个由 make_release 生成的目录。
+/app/build/runtime/
+/app/build/pyinstaller/
 *.egg-info/
 dist/
