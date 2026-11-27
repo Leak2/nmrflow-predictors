@@ -1,5 +1,9 @@
 # 13C 化学位移经验表（Tier A，参考 TMS，默认溶剂 CDCl3）
 #
+# v0.5.1 补羧酸根（COO⁻）锚定。此前 [O-] 不匹配任何羰基规则，会一路掉到
+#        [alkene] 的两端加和，乙酸钠的羧基碳得到乙烯基值 123.3（实测 182.0，
+#        误差 59 ppm）。带电官能团的 SMARTS 必须显式写电荷：羧酸根氧是
+#        `[OX1-]`（X 是总连接数，含隐式 H），`[OX2H]` 那套写法套不上去。
 # v0.5.0 给含 C=C 的环单开一张修正表（[sp3.ring_alkene]），饱和环常数在环烯上不适用。
 # v0.4.0 把 aryl/vinyl 的 β 位增量（b）归零：实测 β 位芳基/烯基不产生去屏蔽，
 #        原先的 6.0 / 3.0 是凭直觉填的，导致乙苯甲基错 6.6、异丙苯甲基错 7.5。
@@ -14,7 +18,7 @@
 # 芳环碳：δ = 128.5 + Σ 取代基 i/o/m/p 增量
 # 官能团碳：直接锚定（置信度最高）
 
-version = "0.5.0"
+version = "0.5.1"
 source = "Grant-Paul; Pretsch 4th ed.; SDBS 经验值"
 
 [sp3.grant_paul]
@@ -138,15 +142,33 @@ CH3F         = { value =  75.0, smarts = "[CX4;H3]F" }
 ketone_aliphatic = { value = 208.0, smarts = "[CX3;H0](=[OX1])([#6])[#6;!$(C=[OX1])]" }
 ketone_aryl      = { value = 197.0, smarts = "[CX3](=[OX1])([c])[#6]" }
 ketone_unsat     = { value = 190.0, smarts = "[CX3](=[OX1])([CX3]=[CX3])[#6]" }
-aldehyde         = { value = 200.0, smarts = "[CX3H1]=[OX1]" }
+# ★ `[CX3H1]=[OX1]` 太宽：只要"碳上带 H 且连羰基"就算醛，于是甲酰胺（连 N）
+#   和甲酸根（连 O⁻）都被抢成 200.0——甲酰胺实测 165，误差 35 ppm。
+#   醛的羰基碳，另一个邻居必须是碳或氢（甲醛是第二个 H），所以补 `[#6,#1]`。
+aldehyde         = { value = 200.0, smarts = "[CX3H1](=[OX1])[#6,#1]" }
 # 羰基与 π 体系共轭会压低约 4~6 ppm。乙酸甲酯 171.0 / 苯甲酸甲酯 166.9、
 # 丙烯酸甲酯 167.0；乙酸 178.0 / 苯甲酸 172.5。混用同一个常数会系统性偏高。
 # ★ 这两条必须排在通用条目**前面**：functional 按表内顺序匹配，先命中先生效。
 # ★ SMARTS 陷阱：`[c,CX3;$(C=[CX3])]` 里的 `;` 比 `,` 结合得紧，实际含义是
 #   "(c 或 CX3) 且 C=[CX3]"，芳环永远匹配不上；要写成 `[c,$(C=[CX3])]`。
 carboxylic_acid_conjugated = { value = 172.5, smarts = "[CX3](=[OX1])([c,$(C=[CX3])])[OX2H]" }
+# 羧酸根（阴离子）：比对应的中性羧酸高 4~7 ppm。
+#   脂肪：乙酸钠 182.0 / 丙酸钠 183.5 / 丁酸钠 183.8 → 取 182.0
+#   共轭：甲酸钠 171.8 / 苯甲酸钠 175.6 / 肉桂酸钠 ~172 → 取 174.0
+# ★ 电荷必须显式写：`[OX2H]` 不会匹配 `[O-]`，少了这两条就掉到 [alkene] 的两端加和
+#   （乙酸钠得到乙烯基值 123.3，实测 182.0，误差 59 ppm）。
+# ★ SMARTS 陷阱：`X` 是**总连接数**（含隐式 H），不是能连几个键。
+#   羧酸根氧只有 1 个邻居、0 个 H，所以是 `[OX1-]`；写成 `[OX2-]` 匹配为空。
+#   中性羧酸的 `[OX2H]` 之所以是 X2，是因为 1 个 C + 1 个 H。
+# ★ 与 carboxylic_acid 一样，共轭版必须排在通用版前面，先命中先生效。
+carboxylate_conjugated = { value = 174.0, smarts = "[CX3](=[OX1])([c,$(C=[CX3])])[OX1-]" }
+# 甲酸根碳上带 H，比同族低 10 ppm（甲酸钠 171.8 / 乙酸钠 182.0）。
+# 规律与中性一侧一致（甲酸 166 / 乙酸 178），但那条既有规则尚未拆，
+# 见 README「已知局限」。这里只处理本表新增的阴离子。
+carboxylate_formate = { value = 171.8, smarts = "[CX3H1](=[OX1])[OX1-]" }
 ester_conjugated = { value = 167.0, smarts = "[CX3](=[OX1])([c,$(C=[CX3])])[OX2;H0]" }
 carboxylic_acid  = { value = 178.0, smarts = "[CX3](=[OX1])[OX2H]" }
+carboxylate      = { value = 182.0, smarts = "[CX3](=[OX1])[OX1-]" }
 ester            = { value = 171.0, smarts = "[CX3](=[OX1])[OX2;H0]" }
 amide            = { value = 168.0, smarts = "[CX3](=[OX1])[NX3]" }
 acid_chloride    = { value = 170.0, smarts = "[CX3](=[OX1])[Cl]" }
