@@ -8,10 +8,10 @@ authors:
 version: "0.3.5"
 date-released: "2026-11-28"
 license: "BSD-3-Clause"
-doi: "10.5281/zenodo.23923954"
+doi: "10.5281/zenodo.24623229"
 identifiers:
   - type: doi
-    value: "10.5281/zenodo.23923954"
+    value: "10.5281/zenodo.24623229"
 repository-code: "https://github.com/Leak2/nmrflow-predictors"
 url: "https://github.com/Leak2/nmrflow-predictors/releases/tag/v0.3.5"
 abstract: >-

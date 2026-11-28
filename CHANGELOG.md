@@ -42,6 +42,9 @@
   元数据改成 0.3.5（包内 `test_example_predicted_image` 直接断言它）；评估脚本计数
   统一成实际的 14 个（README 原写 12、REPRODUCE 原写 12、`app/tools/README.md` 原写 13）。
 
+Zenodo 版本 DOI：`10.5281/zenodo.24623229`（reserved，发布后生效）；
+概念 DOI：`10.5281/zenodo.23923954`。
+
 ## 0.3.4 (2026-11-13) — curated 覆盖诊断
 
 新增 `tools/diag_curated_override.py`：对每个核构造“不保护”的合并结果，
