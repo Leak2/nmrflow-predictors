@@ -262,9 +262,9 @@ nmrflow/
 
 Use [CITATION.cff](CITATION.cff).
 
-- Version DOI (0.3.5): not created yet — cite the concept DOI below.
+- Version DOI (0.3.5): <https://doi.org/10.5281/zenodo.24623229>
 - Concept DOI (all versions): <https://doi.org/10.5281/zenodo.23923954>
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23923954.svg)](https://doi.org/10.5281/zenodo.23923954)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24623229.svg)](https://doi.org/10.5281/zenodo.24623229)
 
 If you use nmrflow in academic work, cite the software and the exact version.
