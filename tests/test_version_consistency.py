@@ -52,7 +52,7 @@ def _cff_scalar(text: str, key: str) -> str:
 # pyproject.toml
 # ---------------------------------------------------------------------------
 def test_pyproject_version_matches():
-    cfg = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    cfg = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8-sig"))
     assert cfg["project"]["version"] == VERSION, (
         f"pyproject.toml 是 {cfg['project']['version']}，"
         f"但 nmrflow.__version__ 是 {VERSION}"
@@ -63,13 +63,13 @@ def test_pyproject_version_matches():
 # CITATION.cff
 # ---------------------------------------------------------------------------
 def test_citation_version_matches():
-    text = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
+    text = (ROOT / "CITATION.cff").read_text(encoding="utf-8-sig")
     assert _cff_scalar(text, "version") == VERSION
 
 
 def test_citation_url_matches_version():
     """url 指向 releases/tag/vX.Y.Z，tag 名必须与版本号一致。"""
-    text = (ROOT / "CITATION.cff").read_text(encoding="utf-8")
+    text = (ROOT / "CITATION.cff").read_text(encoding="utf-8-sig")
     url = _cff_scalar(text, "url")
     assert url.endswith(f"/tag/v{VERSION}"), f"CITATION.cff 的 url 是 {url}"
 
@@ -78,13 +78,13 @@ def test_citation_url_matches_version():
 # .zenodo.json
 # ---------------------------------------------------------------------------
 def test_zenodo_version_matches():
-    meta = json.loads((ROOT / ".zenodo.json").read_text(encoding="utf-8"))
+    meta = json.loads((ROOT / ".zenodo.json").read_text(encoding="utf-8-sig"))
     assert meta["version"] == VERSION
 
 
 def test_zenodo_version_identifier_matches():
     """related_identifiers 里 isVersionOf 那条指向 tag，必须与版本号一致。"""
-    meta = json.loads((ROOT / ".zenodo.json").read_text(encoding="utf-8"))
+    meta = json.loads((ROOT / ".zenodo.json").read_text(encoding="utf-8-sig"))
     versioned = [
         item["identifier"]
         for item in meta.get("related_identifiers", [])
@@ -106,7 +106,7 @@ def test_no_stray_version_literals_in_tracked_configs():
     """
     watched = ["pyproject.toml", "CITATION.cff", ".zenodo.json"]
     for name in watched:
-        text = (ROOT / name).read_text(encoding="utf-8")
+        text = (ROOT / name).read_text(encoding="utf-8-sig")
         # `cff-version` 是引文文件格式规范的版本（当前 1.2.0），不是软件版本
         text = re.sub(r"^cff-version:.*$", "", text, flags=re.MULTILINE)
         found = set(re.findall(r"\bv?(\d+\.\d+\.\d+)\b", text))

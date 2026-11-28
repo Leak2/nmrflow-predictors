@@ -29,6 +29,15 @@
 - **`.gitignore` 的 `build/` 与已跟踪的 `app/build/*.sqlite` 语义打架**：已跟踪文件
   虽不受影响，但将来新建的索引会被静默忽略。改为精确忽略 `/app/build/runtime/`
   与 `/app/build/pyinstaller/` 两个由 make_release 生成的目录。
+- **`prepare(add_hs=False)` 的修复补了回归测试**（`tests/test_ms.py`，4 条参数化）：
+  这条分支此前没有任何测试覆盖，改回旧算法不会有测试变红。断言
+  `prepare(smiles, add_hs=True/False).formula` 两者相同且等于真实分子式。
+- **版本守卫改用 `utf-8-sig` 读受守护的配置**：原实现用 `encoding="utf-8"`，遇到
+  UTF-8 BOM 时首行变成 `\ufeffcff-version: 1.2.0`，`^cff-version:` 的正则去不掉它，
+  `1.2.0` 会被当成杂散软件版本号而误报。三个文件当前都无 BOM，但用记事本或 VSCode
+  另存一次就会假红。
+- README 的测试数字更新为 **302 条 / 19 个模块**，并把羧酸根以外的带电基团、
+  甲酰卤 / 硫代甲酸酯「未建模」两条局限同步到 `README-EN.md`。
 
 ## 0.3.4 (2026-11-13) — curated 覆盖诊断
 
