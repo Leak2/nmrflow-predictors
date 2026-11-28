@@ -50,6 +50,26 @@ def test_formula_from_smiles():
     assert formula_from_mol(prep.mol) == {"C": 2, "H": 6, "O": 1}
 
 
+@pytest.mark.parametrize(
+    "smiles, expected",
+    [
+        ("CCO", {"C": 2, "H": 6, "O": 1}),
+        ("c1ccccc1", {"C": 6, "H": 6}),
+        ("CC(=O)[O-]", {"C": 2, "H": 3, "O": 2}),
+        ("Cn1cnc2c1c(=O)n(C)c(=O)n2C", {"C": 8, "H": 10, "N": 4, "O": 2}),
+    ],
+)
+def test_prepared_formula_counts_implicit_hydrogens(smiles, expected):
+    """add_hs=False 时分子式不能漏掉隐式氢。
+
+    隐式氢不占原子槽位，只存在于 GetTotalNumHs() 里。修复前乙醇会被算成
+    C2O（全部 H 丢失）。AddHs 之后重原子的 GetTotalNumHs() 为 0，所以两种
+    模式共用同一段计数代码都不会重复计数——这里两种模式都断言一遍。
+    """
+    assert prepare(smiles, add_hs=True).formula == expected
+    assert prepare(smiles, add_hs=False).formula == expected
+
+
 def test_hill_notation_roundtrip():
     assert parse_formula("C27H26F3N5S") == REF
 

@@ -173,6 +173,13 @@ are not implemented.
 - **¹H:** typically within ±0.3 ppm; most cases are below ±0.15 ppm.
 - **¹³C:** empirical rules plus HOSE correction; second-order effects are handled by
   the spin Hamiltonian.
+- **¹³C charged groups:** carboxylates are anchored separately (sodium acetate 182.0,
+  sodium formate 171.8, sodium benzoate 175.6). Sulfonates, ammonium salts (–NH₃⁺) and
+  alkoxides still have no rule and fall back to neighbouring generic entries, so their error
+  can reach tens of ppm. Neutral formic acid (experimental 166) still uses the
+  `carboxylic_acid` value of 178. Formyl halides and thioformates are unmodelled as well:
+  after the aldehyde SMARTS was tightened they fall back to the generic `alkene` entry
+  (123.3) instead of being misread as aldehydes (200.0).
 - **¹⁹F/³¹P:** environment-table values take priority over very shallow HOSE hits.
   Global ¹⁹F MAE was not re-derived for every table change; treat unusual environments
   as `low` confidence and check the provenance.
@@ -188,7 +195,7 @@ are not implemented.
 python -m pytest tests/ -q
 ```
 
-- Repository: **283 tests** in 16 modules, including Streamlit AppTest and packaging
+- Repository: **302 tests** in 19 modules, including Streamlit AppTest and packaging
   tests.
 - Portable package: **36** stdlib `unittest` delivery tests (`tests/run_tests.py`);
   the portable runtime does not include pytest.
