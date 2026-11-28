@@ -30,9 +30,9 @@ before treating an output as if it were experimental. See [ETHICS.md](ETHICS.md)
 
 ---
 
-## 2. Version changes (0.3.0 → 0.3.4)
+## 2. Version changes (0.3.0 → 0.3.5)
 
-Current source version: **0.3.4**. Only user-visible changes since 0.3.0 are listed
+Current source version: **0.3.5**. Only user-visible changes since 0.3.0 are listed
 here; 0.2.x history is in [CHANGELOG.md](CHANGELOG.md).
 
 | Version | Change | Effect |
@@ -43,8 +43,9 @@ here; 0.2.x history is in [CHANGELOG.md](CHANGELOG.md).
 | 0.3.2 | ¹⁹F haloethane environments | Six both-carbon halogen environments; CF₂ next to a stereocenter raises a possible-AB warning; the 265-test development suite was added to the repository |
 | 0.3.3 | P1/P2 delivery work | CLI partial-failure return code, >10-spin warning, `M⁺·`, ZIP payload, bat generator/uninstall safety/stop-bat checks, CI actions |
 | 0.3.4 | Sulfonyl fluoride refinement | `CF3-SO2F` and triflate are separate; `R-SO2F` is split into CH₃/CH/CF₂; SO₂F₂, FSO₃H, FSO₃F (S-F/O-F), and R-O-SO₂F are separate; ¹H CH₂ diastereotopic warning; curated-override diagnostic |
+| 0.3.5 | ¹³C charged/formyl rules | Carboxylate COO⁻ has its own anchoring (sodium acetate 182.0, sodium formate 171.8, sodium benzoate 175.6) instead of falling through to `alkene` 123.3; the aldehyde SMARTS is tightened so formamide and formates are no longer misread as aldehydes; `prepare(add_hs=False)` counts implicit hydrogens; cross-file version-consistency tests added |
 
-Tests: **283** repository tests in 16 modules, plus **36** delivery tests in the
+Tests: **306** repository tests in 19 modules, plus **36** delivery tests in the
 portable package (`tests/run_tests.py`). See §8.
 
 ## 3. Installation
@@ -136,7 +137,7 @@ HRMS (DART) for C2H6O m/z: Calculated, 47.0491 [M+H]+.
 The report ends with:
 
 ```text
-Predicted by nmrflow 0.3.4 - not experimental data.
+Predicted by nmrflow 0.3.5 - not experimental data.
 ```
 
 ## 6. How prediction works
@@ -195,7 +196,7 @@ are not implemented.
 python -m pytest tests/ -q
 ```
 
-- Repository: **302 tests** in 19 modules, including Streamlit AppTest and packaging
+- Repository: **306 tests** in 19 modules, including Streamlit AppTest and packaging
   tests.
 - Portable package: **36** stdlib `unittest` delivery tests (`tests/run_tests.py`);
   the portable runtime does not include pytest.
@@ -239,7 +240,7 @@ nmrflow/
 │  ├─ nmrflow/data/            tables, HOSE index, license notices
 │  ├─ tools/                   evaluation and diagnostic tools
 │  └─ build/                   training indexes used by evaluation
-├─ tests/                      283 pytest tests
+├─ tests/                      306 pytest tests
 ├─ packaging/bat/              Windows bat templates
 ├─ assets/, examples/
 ├─ README.md, README-EN.md
@@ -261,9 +262,9 @@ nmrflow/
 
 Use [CITATION.cff](CITATION.cff).
 
-- Version DOI (0.3.4): <https://doi.org/10.5281/zenodo.24199403>
+- Version DOI (0.3.5): not created yet — cite the concept DOI below.
 - Concept DOI (all versions): <https://doi.org/10.5281/zenodo.23923954>
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24199403.svg)](https://doi.org/10.5281/zenodo.24199403)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23923954.svg)](https://doi.org/10.5281/zenodo.23923954)
 
 If you use nmrflow in academic work, cite the software and the exact version.
