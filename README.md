@@ -166,7 +166,7 @@ nmrflow-0.3.5-portable/
 ├─ 安装使用说明.txt        给最终用户的三步上手说明
 ├─ app/                   源码
 │  ├─ nmrflow/data/hose_index.sqlite   HOSE 索引（32 MB，Tier B 靠它）
-│  ├─ tools/              评估套件：复算 §5 的留出法数字（12 个文件）
+│  ├─ tools/              评估套件：复算 §5 的留出法数字（14 个文件）
 │  └─ build/              两份训练索引（27 MB），评估用，运行时不读
 ├─ runtime/python/        内置 CPython 3.13 + rdkit / streamlit / numpy …
 ├─ assets/ examples/ results/ logs/

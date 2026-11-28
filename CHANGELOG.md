@@ -38,6 +38,9 @@
   另存一次就会假红。
 - README 的测试数字更新为 **306 条 / 19 个模块**，并把羧酸根以外的带电基团、
   甲酰卤 / 硫代甲酸酯「未建模」两条局限同步到 `README-EN.md`。
+- 同步示例图与评估套件的口径：`assets/example-predicted-13c.png` 的 `Software`
+  元数据改成 0.3.5（包内 `test_example_predicted_image` 直接断言它）；评估脚本计数
+  统一成实际的 14 个（README 原写 12、REPRODUCE 原写 12、`app/tools/README.md` 原写 13）。
 
 ## 0.3.4 (2026-11-13) — curated 覆盖诊断
 
