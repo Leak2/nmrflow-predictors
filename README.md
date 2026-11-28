@@ -23,9 +23,9 @@ nmrflow 输出的是**预测**，不是实验数据；默认只给 `Calculated`�
 
 ---
 
-## 0. 版本与行为变更（0.3.0 → 0.3.4）
+## 0. 版本与行为变更（0.3.0 → 0.3.5）
 
-当前源码版本 **0.3.4**。这里只记录 0.3.0 及之后用户能感知的变化；0.2.x 的历史见 `CHANGELOG.md`。
+当前源码版本 **0.3.5**。这里只记录 0.3.0 及之后用户能感知的变化；0.2.x 的历史见 `CHANGELOG.md`。
 
 | 版本 | 变化 | 影响 |
 |---|---|---|
@@ -35,8 +35,9 @@ nmrflow 输出的是**预测**，不是实验数据；默认只给 `Calculated`�
 | 0.3.2 | 19F 卤代乙烷环境 | 新增 6 条邻碳卤素环境；CF₂ 紧邻手性中心时提示可能的 AB 分裂；完整 265 条测试进入仓库 |
 | 0.3.3 | P1/P2 收口 | CLI 部分失败、`>10` 自旋、`M⁺·`、ZIP 内容、bat 生成器/卸载安全闸/停止 bat、CI actions |
 | 0.3.4 | 磺酰氟环境细化 | `CF3-SO2F` / triflate 分开；`R-SO2F` 按 CH₃/CH/CF₂ 分档；SO₂F₂、FSO₃H、FSO₃F（S-F/O-F）、R-O-SO₂F 单列；¹H CH₂ 非对映异位提示；新增 curated 覆盖诊断工具 |
+| 0.3.5 | ¹³C 带电/甲酰规则修正 | 羧酸根 COO⁻ 单独锚定（乙酸钠 182.0 / 甲酸钠 171.8 / 苯甲酸钠 175.6），不再掉到 `alkene` 的 123.3；醛的 SMARTS 收紧，甲酰胺、甲酸酯不再被误判为醛；`prepare(add_hs=False)` 的分子式补回隐式氢；新增版本号跨文件一致性测试 |
 
-测试：仓库 `pytest tests/` 共 **302 条**（19 个模块，含 `test_app.py`）；便携包内
+测试：仓库 `pytest tests/` 共 **306 条**（19 个模块，含 `test_app.py`）；便携包内
 `tests/run_tests.py` 是 **36 条**交付级 stdlib unittest。详见 §7。
 
 ## 1. 安装
@@ -158,7 +159,7 @@ python tools/make_release.py      # 组装 + 冻结 exe + 打 zip
 产物在 `dist/`：
 
 ```
-nmrflow-0.3.4-portable/
+nmrflow-0.3.5-portable/
 ├─ NMR-Predictor.exe      双击启动（无控制台窗口）
 ├─ 启动 NMR.bat           命令行版，排错时能看到 Streamlit 原始输出
 ├─ 安装.bat / 卸载.bat    桌面快捷方式的增删
@@ -805,7 +806,7 @@ confidence = "medium"
 
 ## 7. 测试
 
-仓库全量测试（19 个模块，**302 条**）：
+仓库全量测试（19 个模块，**306 条**）：
 
 ```bash
 python -m pytest tests/ -q
@@ -941,13 +942,12 @@ nmrshiftdb2 Database License（附许可证/URI、相同许可共享衍生库、
 不要删。没用索引时不会挂这行。
 
 **Q：怎么引用？**  
-见 [CITATION.cff](CITATION.cff)。版本 DOI：`10.5281/zenodo.24199403`；概念 DOI：`10.5281/zenodo.23923954`。
+见 [CITATION.cff](CITATION.cff)。0.3.5 的 version DOI 尚未创建；引用使用概念 DOI：`10.5281/zenodo.23923954`。
 
 ## 10. 引用
 
-如果 nmrflow 对你有帮助，请引用本仓库的 `CITATION.cff` 对应版本（当前 `0.3.4`）。
+如果 nmrflow 对你有帮助，请引用本仓库的 `CITATION.cff` 对应版本（当前 `0.3.5`）。
 
-**版本 DOI（0.3.4）**：<https://doi.org/10.5281/zenodo.24199403>  
 **概念 DOI（所有版本）**：<https://doi.org/10.5281/zenodo.23923954>
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24199403.svg)](https://doi.org/10.5281/zenodo.24199403)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23923954.svg)](https://doi.org/10.5281/zenodo.23923954)
